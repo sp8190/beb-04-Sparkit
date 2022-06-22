@@ -4,6 +4,7 @@ import {
     Model,
     DataType
 } from "sequelize-typescript";
+import sequelize from "sequelize"
 
 @Table({ timestamps: false })
 export default class users extends Model {
@@ -24,6 +25,13 @@ export default class users extends Model {
 
     @Column({
         type: DataType.STRING,
+        unique:false,
+        allowNull: false
+    })
+    public password!: string;
+
+    @Column({
+        type: DataType.STRING,
         unique:true,
         allowNull: false
     })
@@ -34,12 +42,35 @@ export default class users extends Model {
         unique:true,
         allowNull: false
     })
-    public public_key: string;
+    public account: string;
 
     @Column({
         type: DataType.STRING,
-        unique:true,
+        unique:false,
+        allowNull: false
+    })
+    public balance: string;
+
+    @Column({
+        type: DataType.STRING,
+        unique:false,
         allowNull: false
     })
     public private_key: string;
+
+    @Column({
+        type: DataType.STRING,
+        unique:false,
+        allowNull: false,
+        defaultValue: sequelize.literal("(CURRENT_TIMESTAMP)")
+    })
+    public created_at: string;
+
+    @Column({
+        type: DataType.STRING,
+        unique:false,
+        allowNull: false,
+        defaultValue: sequelize.literal("(CURRENT_TIMESTAMP)")
+    })
+    public updated_at: string;
 }

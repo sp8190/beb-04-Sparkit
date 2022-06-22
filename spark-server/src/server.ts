@@ -5,14 +5,11 @@ import http from 'http';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { sequelize } from "./models";
 import 'reflect-metadata';
-
-const resolvers = require('./graphql/resolvers/index').resolvers
-const typeDefs = require('./graphql/typeDefs/index').typeDefs
+import {resolvers, typeDefs} from './graphql/schema' 
 
 require('dotenv').config();
 
 const SPARK_IT_SERVER_PORT = 4000
-// 각 index에서 머지한 resolver, typeDefs 가져오기
 const app = express();
 const httpServer = http.createServer(app)
 const apolloServer = new ApolloServer({
