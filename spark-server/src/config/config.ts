@@ -1,6 +1,6 @@
 require('dotenv').config();
-const env = process.env;
 
+// .env 파일 항목 데이터 타입 string 명시 
 declare var process : {
   env: {
     SPARK_IT_DB_USERNAME: string,
