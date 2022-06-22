@@ -66,3 +66,11 @@ ALTER TABLE `image` ADD FOREIGN KEY (`id`) REFERENCES `posts` (`id`);
 ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `comments` (`user_id`);
 
 ALTER TABLE `hashtags` ADD FOREIGN KEY (`hashtag`) REFERENCES `posts` (`post_content`);
+
+ALTER TABLE `users` 
+CHANGE COLUMN `created_at` `created_at` VARCHAR(255) NOT NULL DEFAULT 'now()' ,
+CHANGE COLUMN `updated_at` `updated_at` VARCHAR(255) NOT NULL DEFAULT 'now()' ;
+
+ALTER TABLE `posts` 
+CHANGE COLUMN `created_at` `created_at` VARCHAR(255) NOT NULL DEFAULT 'now()' ;
+
