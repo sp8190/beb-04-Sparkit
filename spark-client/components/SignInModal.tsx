@@ -13,7 +13,7 @@ const OrderModal = (props: props): ReactElement => {
             <div className={open ? 'modal active' : 'modal'}>
                 {open ? (
                     <div className="area">
-                        <button className="close" onClick={close}> x </button>
+                        <a className="close" onClick={close}> x </a>
                         <p>로그인 모달 내용</p>
                     </div>
                 ) : null}
@@ -31,6 +31,7 @@ const OrderModal = (props: props): ReactElement => {
                     overflow: hidden;
                     position: absolute;
                     z-index: 100;
+                }
             `}</style>
         </div>
     );

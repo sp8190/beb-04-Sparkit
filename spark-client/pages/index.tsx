@@ -11,7 +11,7 @@ interface HomeProps {
 
 const ARR = Array.from({ length: 10 }, (v, i) => i);
 
-const Home: NextPage = () => {
+const Home: NextPage = ({}) => {
   return (
     <HomeMain>
       <HomeMainDiv>
