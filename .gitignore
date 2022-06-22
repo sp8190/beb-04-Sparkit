@@ -1,0 +1,4 @@
+
+spark-server/node_modules/.bin/nopt
+spark-server/node_modules
+.env
