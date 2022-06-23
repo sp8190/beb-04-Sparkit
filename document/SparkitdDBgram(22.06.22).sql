@@ -17,7 +17,7 @@ CREATE TABLE `posts` (
   `user_id` int
 );
 
-CREATE TABLE `image` (
+CREATE TABLE `images` (
   `id` in PRIMARY KEY AUTO_INCREMENT,
   `image_path` varchar(255),
   `post_id` int
@@ -61,7 +61,7 @@ ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `likes` (`user_id`);
 
 ALTER TABLE `posts` ADD FOREIGN KEY (`id`) REFERENCES `likes` (`post_id`);
 
-ALTER TABLE `image` ADD FOREIGN KEY (`id`) REFERENCES `posts` (`id`);
+ALTER TABLE `images` ADD FOREIGN KEY (`id`) REFERENCES `posts` (`id`);
 
 ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `comments` (`user_id`);
 
