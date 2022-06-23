@@ -1,13 +1,17 @@
-import reset from 'styled-reset'
-import { createGlobalStyle } from 'styled-components'
+import reset from "styled-reset";
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-  /* * {
+  /* 
+  * {
     box-sizing: border-box;
   }
   body{
     font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  div {
+    box-sizing: border-box;
   }
   a {
     color: inherit;
@@ -22,6 +26,10 @@ const GlobalStyle = createGlobalStyle`
     font-family:'Maven Pro', sans-serif;
   }
 
+  li {
+    list-style: none
+  }
+
   @media only screen and (max-width: 768px) {
     body {
       font-size: 12px;
@@ -33,6 +41,6 @@ const GlobalStyle = createGlobalStyle`
       font-size: 10px;
     }
   } */
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;
