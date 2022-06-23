@@ -8,8 +8,8 @@ type user = {
   nickname:string,
   account:string,
   balance:string,
-  private_key:string,
-  created_at:string
+  privateKey:string,
+  createdAt:string
 }
 
 export default {
@@ -20,7 +20,7 @@ export default {
           password:args.password,
           nickname:args.nickname,
           account:args.account,
-          private_key:args.private_key,
+          private_key:args.privateKey,
           balance:args.balance
         });
         return status.SUCCESS
