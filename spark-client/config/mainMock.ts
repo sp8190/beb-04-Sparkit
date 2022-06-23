@@ -5,5 +5,6 @@ export const ARR = Array.from({ length: 10 }, (v, i) => {
     postContent: "제곧내",
     userId: "string",
     createdAt: "date",
+    tag: "#tag",
   };
 });

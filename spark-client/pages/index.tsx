@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { gql, useQuery } from "@apollo/client";
 import { ARR } from "../config/mainMock";
+import { useEffect, useState } from "react";
 
 interface HomeProps {
   backgroundColor: string;
@@ -26,16 +27,25 @@ const ALL_POST = gql`
     posts {
       id
       title
-      postContent
-      userId
-      createAt
     }
   }
 `;
 
 const Home: NextPage = ({}) => {
   const { data, loading } = useQuery<Result>(ALL_POST);
+  const [arr, setArr] = useState([]);
   console.log(data);
+
+  useEffect(() => {}, []);
+
+  // {
+  //   ARR.map((item, index) => {
+  //     return item.tag;
+  //   }).forEach((item)=>{
+  //     const result: Tags = {}
+  //     if(result[item])
+  //   });
+  // }
   return (
     <HomeMain>
       <HomeMainDiv>
@@ -68,6 +78,7 @@ const Home: NextPage = ({}) => {
                   <p>
                     <span>{item.userId}</span>
                     <span>해시태그</span>
+                    <span>{item.createdAt}</span>
                   </p>
                   <HomeMainListDiv>
                     <HomeMainListImgBox>img</HomeMainListImgBox>
