@@ -1,35 +1,61 @@
 import type { NextPage } from "next";
 import styled from "styled-components";
-import GlobalStyle from "../styles/global-styles";
-import NavBar from "../components/NavBar";
-import Head from "next/head";
-import Image from "next/image";
+
+import { gql, useQuery } from "@apollo/client";
+import { ARR } from "../config/mainMock";
 
 interface HomeProps {
   backgroundColor: string;
 }
 
-const ARR = Array.from({ length: 10 }, (v, i) => i);
+interface Posts {
+  id: number;
+  title: string;
+  postContent: string;
+  userId: number;
+  createdAt: string;
+}
+
+interface Result {
+  data: Posts;
+  loading: boolean;
+}
+
+const ALL_POST = gql`
+  query getPosts {
+    posts {
+      id
+      title
+      postContent
+      userId
+      createAt
+    }
+  }
+`;
 
 const Home: NextPage = ({}) => {
+  const { data, loading } = useQuery<Result>(ALL_POST);
+  console.log(data);
   return (
     <HomeMain>
       <HomeMainDiv>
         <HomeAside>
-          <HomeAsideDiv backgroundColor="tomato">
-            <h4>공지사항</h4>
-            <ul>
-              <li>hi</li>
-              <li>hi2</li>
-            </ul>
-          </HomeAsideDiv>
-          <HomeAsideDiv backgroundColor="skyblue">
-            <nav>
+          <HomeAsideContainer>
+            <HomeAsideDiv backgroundColor="tomato">
+              <h4>공지사항</h4>
               <ul>
-                <li>전체 태그</li>
+                <li>hi</li>
+                <li>hi2</li>
               </ul>
-            </nav>
-          </HomeAsideDiv>
+            </HomeAsideDiv>
+            <HomeAsideDiv backgroundColor="skyblue">
+              <nav>
+                <ul>
+                  <li>전체 태그</li>
+                </ul>
+              </nav>
+            </HomeAsideDiv>
+          </HomeAsideContainer>
         </HomeAside>
         <HomeSection>
           <HomeMainHeadDiv>
@@ -38,7 +64,23 @@ const Home: NextPage = ({}) => {
           <HomeMainUl>
             {ARR.map((item, index) => {
               return (
-                <HomeMainList key={`${item + index}`}>{item}</HomeMainList>
+                <HomeMainList key={`${item.id + index}`}>
+                  <p>
+                    <span>{item.userId}</span>
+                    <span>해시태그</span>
+                  </p>
+                  <HomeMainListDiv>
+                    <HomeMainListImgBox>img</HomeMainListImgBox>
+                    <HomeMainListContentBox>
+                      <p>{item.title}</p>
+                      <p>{item.postContent}</p>
+                      <p>
+                        <span>좋아요</span>
+                        <span>댓글</span>
+                      </p>
+                    </HomeMainListContentBox>
+                  </HomeMainListDiv>
+                </HomeMainList>
               );
             })}
           </HomeMainUl>
@@ -61,19 +103,29 @@ const HomeMain = styled.main`
 
 const HomeMainDiv = styled.div`
   display: flex;
-  width: 100%;
+  justify-content: center;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 40px auto 0;
 `;
 
 const HomeAside = styled.aside`
-  width: 20%;
+  position: relative;
+  width: 20vw;
+  min-width: 250px;
+  max-width: 280px;
 `;
 
 const HomeSection = styled.section`
-  width: 90%;
+  width: 60vw;
   padding: 20px;
   box-sizing: border-box;
+`;
+
+const HomeAsideContainer = styled.div`
+  position: fixed;
+  width: inherit;
+  min-width: 250px;
+  max-width: 280px;
 `;
 
 const HomeAsideDiv = styled.div<HomeProps>`
@@ -85,10 +137,7 @@ const HomeAsideDiv = styled.div<HomeProps>`
 `;
 
 const HomeMainUl = styled.ul`
-  overflow-y: scroll;
-  height: calc(100vh - 52px - 40px - 120px - 20px);
-
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     width: 10px;
   }
   &::-webkit-scrollbar-thumb {
@@ -102,18 +151,38 @@ const HomeMainUl = styled.ul`
     background-color: grey;
     border-radius: 10px;
     box-shadow: inset 0px 0px 5px white;
-  }
+  } */
+  margin-left: 20px;
+  width: 100%;
 `;
 
 const HomeMainList = styled.li`
-  width: 96%;
+  width: 100%;
   background-color: #595959;
-  height: 130px;
+  height: 120px;
   border-radius: 2px;
-  margin: 12px;
+  margin: 12px 0;
+  padding: 16px;
+  box-sizing: border-box;
+`;
+
+const HomeMainListDiv = styled.div`
+  display: flex;
+  margin-top: 12px;
+`;
+
+const HomeMainListImgBox = styled.div`
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+`;
+
+const HomeMainListContentBox = styled.div`
+  display: inline-block;
+  width: 70%;
 `;
 
 const HomeMainHeadDiv = styled.div`
   height: 60px;
-  padding: 20px;
+  padding: 10px 20px;
 `;
