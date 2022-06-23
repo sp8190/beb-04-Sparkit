@@ -8,23 +8,19 @@ type user = {
   nickname:string,
   account:string,
   balance:string,
-  privateKey:string,
-  createdAt:string,
-  updatedAt:string
+  private_key:string,
+  created_at:string
 }
 
 export default {
-    Query: {
-        hi: () => '👋  hello from user query! 👋 '
-    }, 
     Mutation: {
       async createUser(_:any,args:user) {
-        let user = await userModel.create({ 
+        await userModel.create({ 
           email:args.email,
           password:args.password,
           nickname:args.nickname,
           account:args.account,
-          private_key:args.privateKey,
+          private_key:args.private_key,
           balance:args.balance
         });
         return status.SUCCESS
