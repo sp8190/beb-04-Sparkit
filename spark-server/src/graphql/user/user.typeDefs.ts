@@ -13,7 +13,7 @@ export default gql`
     updated_at:String
   }
   type Mutation {
-    createUser(email:String!, password:String!, nickname:String!, account:String!, balance:String!, privateKey:String!):Boolean!
+    createUser(email:String!, password:String!, nickname:String!, account:String!, balance:String!, private_key:String!):Boolean!
     login(email:String!, password:String!):User
   }
 `;

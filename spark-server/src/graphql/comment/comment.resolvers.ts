@@ -3,8 +3,8 @@ import {status} from "../../constants/code"
 
 type comment = {
     id:number,
-    postId:number,
-    userId:number,
+    post_id:number,
+    user_id:number,
     comment:string
 }
 
@@ -12,8 +12,8 @@ export default {
     Mutation: {
         async createComment(_:any, args:comment) {
             let commentInfo = await commentModel.create({
-                post_id:args.postId,
-                user_id:args.userId,
+                post_id:args.post_id,
+                user_id:args.user_id,
                 comment:args.comment
             })
             if(!commentInfo) {

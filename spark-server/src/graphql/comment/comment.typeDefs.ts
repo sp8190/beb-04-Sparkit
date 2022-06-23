@@ -2,11 +2,11 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
   type Comment {
-    postId:Int,
-    userId:Int,
+    post_id:Int,
+    user_id:Int,
     comment:String
   }
   type Mutation {
-    createComment(postId:Int, userId:Int, comment:String):Int
+    createComment(post_id:Int, user_id:Int, comment:String):Int
   }
 `;
