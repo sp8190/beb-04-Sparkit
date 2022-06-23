@@ -57,7 +57,7 @@ export default function WritePost() {
                height: '40%',
                width: '40%'
            }}>
-            <img src={isdataURL}/>
+            <img alt='imgURL' src={isdataURL}/>
            </div>
         </div>
         
