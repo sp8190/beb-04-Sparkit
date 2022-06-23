@@ -25,7 +25,7 @@ export default class posts extends Model {
 
     @Column({
         type: DataType.STRING,
-        unique:true,
+        unique:false,
         allowNull: true
     })
     public post_content: string;
