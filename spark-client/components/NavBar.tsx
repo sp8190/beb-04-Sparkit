@@ -10,6 +10,7 @@ interface Props {
 
 const NavContainer = styled.nav<Props>`
   position: ${(props) => props.position};
+  top: 0;
   display: flex;
   width: 100%;
   box-sizing: border-box;
@@ -83,7 +84,8 @@ const NavBar = (): ReactElement => {
 
   const router = useRouter();
   return (
-    <NavContainer position={router.pathname === "/SignUp" ? "relative" : "fixed"}
+    <NavContainer
+      position={router.pathname === "/SignUp" ? "relative" : "fixed"}
     >
       <NavLogo onClick={() => router.push("/")}>Spark it</NavLogo>
 

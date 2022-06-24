@@ -74,8 +74,10 @@ const Home = (props: Props) => {
               <nav>
                 <ul>
                   <AsideLi>전체 태그</AsideLi>
-                  {obj.map((item) => {
-                    return <AsideLi key={item.name}>{item.name}</AsideLi>;
+                  {obj.map((item, index) => {
+                    return (
+                      <AsideLi key={item.name + index}>{item.name}</AsideLi>
+                    );
                   })}
                 </ul>
               </nav>
