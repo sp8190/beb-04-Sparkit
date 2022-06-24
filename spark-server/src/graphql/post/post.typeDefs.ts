@@ -34,6 +34,6 @@ export default gql`
     getPostsByHashtag(hashtag_id:Int):[Post]
   }
   type Mutation {
-    createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String]):Boolean!
+    createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String]):Int!
   }
 `;

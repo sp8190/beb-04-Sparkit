@@ -135,7 +135,7 @@ export default {
                 })
                 
             } 
-            return status.SUCCESS
+            return post.id
         }
     }
 }
