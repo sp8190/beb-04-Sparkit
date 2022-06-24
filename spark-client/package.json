@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.8",
+    "@hookform/resolvers": "^2.9.2",
     "@types/styled-components": "^5.1.25",
     "graphql": "^16.5.0",
     "next": "12.1.6",
@@ -21,7 +22,8 @@
     "react-router-dom": "^6.3.0",
     "styled-components": "^5.3.5",
     "styled-reset": "^4.4.1",
-    "use-query": "^1.0.2"
+    "use-query": "^1.0.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

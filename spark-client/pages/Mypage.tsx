@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import client from "../apollo-client";
+import NavBar from "../components/NavBar";
 
 // export async function getStaticProps() {
 //     const { data } = await client.query({
@@ -29,6 +30,7 @@ export default function Mypage() {
 
     return (
         <div>
+            <NavBar/>
             마이페이지
         </div>
 

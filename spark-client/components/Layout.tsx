@@ -8,7 +8,7 @@ type Props = {
 export default function Layout(props: Props) {
     return (
         // width: 100% , padding: 0px
-        <div className="w-full p-0">
+        <div >
             <NavBar />
             {props.children}
         </div>
