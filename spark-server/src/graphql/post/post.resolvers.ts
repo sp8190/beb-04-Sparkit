@@ -43,9 +43,9 @@ type user = {
 export default {
     Post: {
         async hashtags(root:any) {
-            const getHashtagsQuery = `SELECT hashtags.* FROM hashtags, posts_hashtags where hashtags.id = posts_hashtags.hashtag_id and posts_hashtags.post_id = :postId`
+            const getHashtagsQuery = `SELECT hashtags.* FROM hashtags, posts_hashtags where hashtags.id = posts_hashtags.hashtag_id and posts_hashtags.post_id = :post_id`
             const getHashtagsValue = {
-                postId: root.id
+                post_id: root.id
             }
             const hashtags = await sequelize.query(getHashtagsQuery, {replacements: getHashtagsValue})
             return hashtags[0]
@@ -90,13 +90,22 @@ export default {
             let posts = await postModel.findAll()
             return posts
         },
-        async getPost(_:any, args:{postId:number}) {
-            var postInfo = await postModel.findOne({
+        async getPost(_:any, args:{post_id:number}) {
+            let postInfo = await postModel.findOne({
                 where: {
-                    id:args.postId
+                    id:args.post_id
                 }
             })
             return postInfo
+        },
+        async getPostsByHashtag(_:any, args:{hashtag_id:number}) {
+            console.log("hashtag_id", args.hashtag_id)
+            const getPostsByHashtagQuery = `select posts.* FROM posts, posts_hashtags where posts_hashtags.hashtag_id = :hashtag_id and posts.id = posts_hashtags.post_id`
+            const getPostsByHashtagValue = {
+                hashtag_id:args.hashtag_id
+            }
+            const posts = await sequelize.query(getPostsByHashtagQuery, {replacements: getPostsByHashtagValue})
+            return posts[0]
         }
     },
     Mutation: {
@@ -126,7 +135,7 @@ export default {
                 })
                 
             } 
-            return status.SUCCESS
+            return post.id
         }
     }
 }

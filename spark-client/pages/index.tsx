@@ -23,8 +23,8 @@ interface Result {
 }
 
 const ALL_POST = gql`
-  query getPosts {
-    posts {
+  query GetPosts {
+    getPosts {
       id
       title
     }
