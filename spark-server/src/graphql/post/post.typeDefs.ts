@@ -30,10 +30,10 @@ export default gql`
   }
   type Query {
     getPosts:[Post]
-    getPost(postId:Int):Post
+    getPost(post_id:Int):Post
+    getPostsByHashtag(hashtag_id:Int):[Post]
   }
   type Mutation {
-    createPost(title:String!, postContent:String!, userId:Int, hashtags:[String]):Boolean!
-    getPostsByHashtags(hashtag:String):[Post]
+    createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String]):Boolean!
   }
 `;
