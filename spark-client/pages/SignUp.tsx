@@ -72,7 +72,7 @@ const Title = styled.div`
   color: #55e696;
   font-weight: 600;
   display: flex;
-  font-size: 3rem;
+  font-size: 4rem;
   justify-content: center;
   padding-top: 50px;
 

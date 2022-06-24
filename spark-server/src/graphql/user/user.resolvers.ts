@@ -8,24 +8,23 @@ type user = {
   nickname:string,
   account:string,
   balance:string,
-  private_key:string,
-  created_at:string
-}
-
-type token = {
-  access_token:string,
-  refresh_token:string
+  privateKey:string,
+  createdAt:string,
+  updatedAt:string
 }
 
 export default {
+    Query: {
+        hi: () => '👋  hello from user query! 👋 '
+    }, 
     Mutation: {
       async createUser(_:any,args:user) {
-        await userModel.create({ 
+        let user = await userModel.create({ 
           email:args.email,
           password:args.password,
           nickname:args.nickname,
           account:args.account,
-          private_key:args.private_key,
+          private_key:args.privateKey,
           balance:args.balance
         });
         return status.SUCCESS
@@ -40,23 +39,7 @@ export default {
         if(!user) {
           return status.WRONG_USER_INFO
         }
-
-        const jwt = require('jsonwebtoken')
-        const accessToken = jwt.sign({
-          id:user.id,
-          email:user.email,
-          nickname:user.nickname,
-          account:user.account,
-          iat:new Date().getTime()/1000,
-          exp:1485270000000
-        }, process.env.ACCESS_SECRET)
-        const refreshToken = jwt.sign({
-          id:user.id,
-          email:user.email,
-          nickname:user.nickname,
-          account:user.account
-        }, process.env.REFRESH_SECRET)
-        return {"access_token":accessToken, "refresh_token":refreshToken}
+        return user
       }
     }
   };
