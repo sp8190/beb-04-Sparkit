@@ -4,9 +4,12 @@ import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import styled from "styled-components";
 import SignUp from "./../pages/SignUp";
+interface Props {
+  position: string;
+}
 
-const NavContainer = styled.nav`
-  position: fixed;
+const NavContainer = styled.nav<Props>`
+  position: ${(props) => props.position};
   display: flex;
   width: 100%;
   box-sizing: border-box;
@@ -80,7 +83,8 @@ const NavBar = (): ReactElement => {
 
   const router = useRouter();
   return (
-    <NavContainer>
+    <NavContainer position={router.pathname === "/SignUp" ? "relative" : "fixed"}
+    >
       <NavLogo onClick={() => router.push("/")}>Spark it</NavLogo>
 
       <BtnContainer>

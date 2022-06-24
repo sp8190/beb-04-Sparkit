@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { gql, useQuery } from "@apollo/client";
 import { ARR } from "../config/mainMock";
 import { useEffect, useState } from "react";
+import { config } from './../../spark-server/src/config/config';
 
 interface HomeProps {
   backgroundColor: string;
@@ -23,10 +24,23 @@ interface Result {
 }
 
 const ALL_POST = gql`
-  query getPosts {
-    posts {
+  query GetPosts {
+    getPosts {
       id
       title
+      post_content
+      user_id
+      created_at
+      hashtags {
+        id
+        hashtag
+      }
+      comments {
+        post_id
+        user_id
+        comment
+      }
+      likes
     }
   }
 `;
