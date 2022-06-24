@@ -10,7 +10,7 @@ import { sequelize } from '../../models/index';
 type inputPost = {
     title:string,
     post_content:string,
-    userId:number,
+    user_id:number,
     hashtags:[string]
 }
 
@@ -113,7 +113,7 @@ export default {
             let post = await postModel.create({
                 title:args.title,
                 post_content:args.post_content,
-                user_id:args.userId
+                user_id:args.user_id
             });
             if(!post) {
                 return status.SERVER_ERROR
