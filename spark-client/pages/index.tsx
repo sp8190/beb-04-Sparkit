@@ -7,6 +7,11 @@ import { useEffect, useState, useRef } from "react";
 
 import { useRouter } from "next/router";
 
+import LikeAndComment, {
+  MainListLikeButton,
+  MainListContentP,
+} from "../components/LikeAndComment";
+
 interface Hashtags {
   id: number;
   hashtag: string;
@@ -136,10 +141,7 @@ const Home: NextPage = ({}) => {
                       <MainListContentP>{item.title}</MainListContentP>
                       <MainListContentP>{item.post_content}</MainListContentP>
                     </MainListButton>
-                    <MainListContentP>
-                      <MainListLikeButton>{item.likes}</MainListLikeButton>
-                      <MainListLikeButton>댓글</MainListLikeButton>
-                    </MainListContentP>
+                    <LikeAndComment />
                   </MainListContentBox>
                 </MainListDiv>
               </MainList>
@@ -177,21 +179,6 @@ const MainList = styled.li`
 
   &:hover {
     box-shadow: 0.5px 0.5px 10px #55e696;
-  }
-`;
-
-const MainListLikeButton = styled.button`
-  outline: none;
-  border: none;
-  box-shadow: none;
-  background-color: transparent;
-  color: #fff;
-  padding: 8px 8px 2px;
-  &:first-child {
-    padding-right: 8px;
-  }
-  & + button {
-    border-left: 1px solid #aaa;
   }
 `;
 
@@ -247,14 +234,6 @@ const MainListContentBox = styled.div`
 
   > :last-child {
     border-top: 1px solid #aaa;
-  }
-`;
-
-const MainListContentP = styled.p`
-  padding: 4px 0 8px;
-  text-align: left;
-  &:last-child {
-    padding: 0;
   }
 `;
 

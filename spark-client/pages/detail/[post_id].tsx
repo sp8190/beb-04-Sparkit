@@ -2,6 +2,9 @@ import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { useState } from "react";
+
+import LikeAndComment from "../../components/LikeAndComment";
+
 const GET_POST = gql`
   query getPost($postId: Int!) {
     getPost(post_id: $postId) {
@@ -26,15 +29,38 @@ const GET_POST = gql`
     }
   }
 `;
-const PostTitle = styled.h1``;
+const PostTitle = styled.h1`
+  font-size: 36px;
+`;
+
+const PostUser = styled.div`
+  font-size: 20px;
+`;
 const Content = styled.textarea``;
 const LikeBtn = styled.button``;
 const DetailContainer = styled.div`
-  width: 60vw;
+  width: 60%;
   padding: 20px;
   margin-left: 12px;
   box-sizing: border-box;
   min-height: calc(100vh - 80px);
+`;
+
+const PostContent = styled.div`
+  background-color: #595959;
+  width: 100%;
+`;
+
+const PostHeader = styled.div`
+  background-color: #595959;
+  border-bottom: 1px solid #797979;
+  padding: 30px 60px;
+  box-sizing: border-box;
+  width: 100%;
+`;
+
+const PostBody = styled(PostHeader)`
+  border: none;
 `;
 
 export default function Post() {
@@ -67,10 +93,18 @@ export default function Post() {
   console.log(data, loading);
   return (
     <DetailContainer>
-      <PostTitle>
-        {loading ? "Loading..." : `${data?.getPost?.title}`}
-      </PostTitle>
-      <Content>{data?.post?.content}</Content>
+      <PostContent>
+        <PostHeader>
+          <PostTitle>
+            {loading ? "Loading..." : `${data?.getPost?.title}`}
+          </PostTitle>
+          <PostUser>{data?.getPost?.writer.nickname}</PostUser>
+        </PostHeader>
+        <PostBody>
+          <LikeAndComment />
+        </PostBody>
+      </PostContent>
+      <Content>{data?.getPost?.content}</Content>
       <LikeBtn onClick={onClick}>{data?.post?.like ? 0 : isLiked}</LikeBtn>
     </DetailContainer>
   );
