@@ -1,15 +1,13 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { create } from "ipfs-http-client";
+import axios from "axios";
 
 const CREATE_POST =gql`
 mutation CreatePost($title: String!, $post_content: String!, $user_id: Int, $hashtags: [String]) {
     createPost(title: $title, post_content: $post_content, user_id: $user_id, hashtags: $hashtags)
   }
 `
-// 무시해 주셔도 됩니다. (잘 돌아가지만 수정할 예정)
-const client = create("https://ipfs.infura.io:5001/api/v0");
 
 export default function WritePost() {
     const [isImageUpload, setImageUploaded] = useState(false);
@@ -35,23 +33,30 @@ export default function WritePost() {
         //  } });
     };
 
+    const [fileImg, setFileImg] = useState(null);
+    const sendFileToIPFS = async () => {
+      console.log("시작", new Date().toLocaleString())
+      if (fileImg) {
+        const formData = new FormData();
+        formData.append("file", fileImg);
 
-
-    const uploadImage = async (f: any) => {
-        //console.log("image upload", f.target.files[0])
-        const img = f.target.files[0];
-        try {
-            const added = await client.add(img); //파일 업로드
-            const url = `https://ipfs.io/ipfs/${added.path}`;
-            console.log(url)
-            setImageUploaded(true)
-            // 무시해 주셔도 됩니다. (잘 돌아가지만 수정할 예정)
-            setdataURL([...isdataURL, url]);
-        }
-        catch (err) {
-            console.log("upload failed ", err)
-        }
+        const resFile = await axios({
+            method: "post",
+            url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+            data: formData,
+            headers: {
+                'pinata_api_key': `54f614daf83b97f523ed`,
+                'pinata_secret_api_key': `ee4d5326c60c345322fe611f7a1a04fb6a51077ee3e1c4d1305d1cc5fc11667a`,
+                "Content-Type": "multipart/form-data"
+            },
+        });
+        console.log("resFile", resFile)
+        const ImgHash = `https://ipfs.moralis.io:2053/ipfs/${resFile.data.IpfsHash}`;
+        setdataURL([...isdataURL, ImgHash]);
+        console.log(ImgHash); 
+      }
     }
+
     return (
         <Wrapper>
             <FormWrap>
@@ -74,7 +79,8 @@ export default function WritePost() {
                 </HashBox>
                 <ImageBox>
                     <label className='image'>사진업로드</label>
-                    <input className='upload' onChange={uploadImage} type="file" accept="image/*" required></input>
+                    <input type="file" onChange={(e) =>setFileImg(e.target.files[0])} required />
+                    <button type='button' onClick={() => sendFileToIPFS()} >등록</button>
                     {
                         isImageUpload ?
                             loading ? "Loading image..." : "Upload complete!"
@@ -86,7 +92,7 @@ export default function WritePost() {
 
             {isdataURL.map((token) => {
                 return (
-                    <div style={{
+                    <div key={token} style={{
                         height: '40%',
                         width: '40%'
                     }}>           

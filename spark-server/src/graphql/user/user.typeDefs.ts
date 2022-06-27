@@ -8,18 +8,21 @@ export default gql`
     nickname:String,
     account:String,
     balance:String,
-
     private_key:String,
     created_at:String,
     updated_at:String
   }
+  type Token {
+    access_token:String,
+    refresh_token:String
+
+  }
   type Mutation {
-    createUser(email:String!, password:String!, nickname:String!, account:String!, balance:String!, privateKey:String!):Boolean!
-    login(email:String!, password:String!):User
+    createUser(email:String!, password:String!, nickname:String!, account:String!, balance:String!, private_key:String!):Boolean!
+    login(email:String!, password:String!):Token
   }
 
   type Query {
     hi: String
   }
-
 `;

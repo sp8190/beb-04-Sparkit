@@ -4,6 +4,7 @@ import postHashtagModel from "../../models/post.hashtag.model"
 import userModel from "../../models/user.model";
 import likeModel from "../../models/like.model";
 import commentModel from "../../models/comment.model"
+import imageModel from "../../models/image.model"
 import {status} from "../../constants/code"
 import { sequelize } from '../../models/index';
 
@@ -11,14 +12,15 @@ type inputPost = {
     title:string,
     post_content:string,
     user_id:number,
-    hashtags:[string]
+    hashtags:[string],
+    images:[string]
 }
 
 type post = {
     id:number,
     title:string,
     post_content:string,
-    user_id:number
+    user_id:number,
     created_at:string
   }
 
@@ -38,6 +40,12 @@ type user = {
     id:number,
     email:string,
     nickname:string
+}
+
+type image = {
+    id:number,
+    image_path:string,
+    post_id:number
 }
 
 export default {
@@ -73,6 +81,14 @@ export default {
                 }
             })
             return likeCount
+        },
+        async images(root:any) {
+            let images = await imageModel.findAll({
+                where: {
+                    post_id:root.id
+                }
+            })
+            return images
         } 
     },
     Comment: {
@@ -99,7 +115,6 @@ export default {
             return postInfo
         },
         async getPostsByHashtag(_:any, args:{hashtag_id:number}) {
-            console.log("hashtag_id", args.hashtag_id)
             const getPostsByHashtagQuery = `select posts.* FROM posts, posts_hashtags where posts_hashtags.hashtag_id = :hashtag_id and posts.id = posts_hashtags.post_id`
             const getPostsByHashtagValue = {
                 hashtag_id:args.hashtag_id
@@ -118,6 +133,17 @@ export default {
             if(!post) {
                 return status.SERVER_ERROR
             }
+
+            for (let image of args.images) {
+                let savedImage = await imageModel.create({
+                    image_path: image,
+                    post_id:post.id
+                })
+                if(!savedImage) {
+                    return status.SERVER_ERROR
+                }
+            }
+
             for (let inputHashtag of args.hashtags) {
                 var hashtag = await hashtagModel.findOne({
                     where: {
@@ -135,6 +161,7 @@ export default {
                 })
                 
             } 
+
             return post.id
         }
     }

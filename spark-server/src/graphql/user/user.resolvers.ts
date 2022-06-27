@@ -12,6 +12,11 @@ type user = {
   created_at:string
 }
 
+type token = {
+  access_token:string,
+  refresh_token:string
+}
+
 export default {
     Mutation: {
       async createUser(_:any,args:user) {
@@ -35,7 +40,23 @@ export default {
         if(!user) {
           return status.WRONG_USER_INFO
         }
-        return user
+
+        const jwt = require('jsonwebtoken')
+        const accessToken = jwt.sign({
+          id:user.id,
+          email:user.email,
+          nickname:user.nickname,
+          account:user.account,
+          iat:new Date().getTime()/1000,
+          exp:1485270000000
+        }, process.env.ACCESS_SECRET)
+        const refreshToken = jwt.sign({
+          id:user.id,
+          email:user.email,
+          nickname:user.nickname,
+          account:user.account
+        }, process.env.REFRESH_SECRET)
+        return {"access_token":accessToken, "refresh_token":refreshToken}
       }
     }
   };
