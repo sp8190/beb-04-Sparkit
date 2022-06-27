@@ -18,7 +18,7 @@ export default gql`
 
   }
   type Mutation {
-    createUser(email:String!, password:String!, nickname:String!, account:String!, private_key:String!):Boolean!
+    createUser(email:String!, password:String!, nickname:String!, account:String!, private_key:String!):Int!
     login(email:String!, password:String!):Token
   }
 

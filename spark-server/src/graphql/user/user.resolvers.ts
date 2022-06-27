@@ -30,14 +30,18 @@ export default {
     },
     Mutation: {
       async createUser(_:any,args:user) {
-        await userModel.create({ 
+        let user = await userModel.create({ 
           email:args.email,
           password:args.password,
           nickname:args.nickname,
           account:args.account,
           private_key:args.private_key
         });
-        return status.SUCCESS
+        //TODO: 테스트용 코드 -> 차후 성공 시 200 리턴으로 수정 예정
+        // return status.SUCCESS
+        let userId = user.id
+        console.log("userId", userId)
+        return userId
       },
       async login(_:any, args:user){
         let user = await userModel.findOne({

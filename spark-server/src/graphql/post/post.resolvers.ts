@@ -7,6 +7,7 @@ import commentModel from "../../models/comment.model"
 import imageModel from "../../models/image.model"
 import {status} from "../../constants/code"
 import { sequelize } from '../../models/index';
+import { sendTokenToWriter } from '../../token/tokenUtil'
 
 type inputPost = {
     title:string,
@@ -130,37 +131,53 @@ export default {
                 post_content:args.post_content,
                 user_id:args.user_id
             });
+
             if(!post) {
                 return status.SERVER_ERROR
             }
 
-            for (let image of args.images) {
-                let savedImage = await imageModel.create({
-                    image_path: image,
-                    post_id:post.id
-                })
-                if(!savedImage) {
-                    return status.SERVER_ERROR
+            let userInfo = await userModel.findOne({
+                where: {
+                    id:args.user_id
+                }
+            })
+            if(userInfo) {
+               sendTokenToWriter(userInfo.account, userInfo.id)
+              
+            }
+
+            if(args.images != null && args.images.length > 0) {
+                for (let image of args.images) {
+                    let savedImage = await imageModel.create({
+                        image_path: image,
+                        post_id:post.id
+                    })
+                    if(!savedImage) {
+                        return status.SERVER_ERROR
+                    }
                 }
             }
 
-            for (let inputHashtag of args.hashtags) {
-                var hashtag = await hashtagModel.findOne({
-                    where: {
-                        hashtag:inputHashtag 
-                    }
-                })
-                if(!hashtag) {
-                    hashtag = await hashtagModel.create({
-                        hashtag:inputHashtag
+            if(args.hashtags != null && args.hashtags.length > 0) {
+                for (let inputHashtag of args.hashtags) {
+                    var hashtag = await hashtagModel.findOne({
+                        where: {
+                            hashtag:inputHashtag 
+                        }
                     })
-                }
-                await postHashtagModel.create({
-                    post_id:post.id,
-                    hashtag_id: hashtag.id
-                })
-                
-            } 
+                    if(!hashtag) {
+                        hashtag = await hashtagModel.create({
+                            hashtag:inputHashtag
+                        })
+                    }
+                    await postHashtagModel.create({
+                        post_id:post.id,
+                        hashtag_id: hashtag.id
+                    })
+                    
+                } 
+            }
+
             return post.id
         }
     }
