@@ -163,10 +163,6 @@ export default {
                 
             } 
 
-            //TODO: 삭제
-            const dummyWriterAddress = '0x560091EeaFA23eDfa0Aa550fC8fb9300dCdF7207'
-            sendTokenToWriter(dummyWriterAddress)
-
             return post.id
         }
     }

@@ -47,6 +47,8 @@ export default gql`
   }
   
   type Mutation {
+
     createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String], images:[String]):Int!
+
   }
 `;
