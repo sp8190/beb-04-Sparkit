@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-express';
+import images from '../../models/image.model';
 
 export default gql`
   type Post {
@@ -6,11 +7,12 @@ export default gql`
     title:String,
     post_content:String,
     user_id:Int,
-    created_at:String
-    hashtags:[Hashtag]
-    comments:[Comment]
+    created_at:String,
+    hashtags:[Hashtag],
+    comments:[Comment],
     writer:User,
-    likes:Int
+    likes:Int,
+    images:[Image]
   }
   type User {
     id:Int,
@@ -28,12 +30,17 @@ export default gql`
     id:Int,
     hashtag:String
   }
+  type Image{
+    id:Int,
+    image_path:String,
+    post_id:Int
+  }
   type Query {
     getPosts:[Post]
     getPost(post_id:Int):Post
     getPostsByHashtag(hashtag_id:Int):[Post]
   }
   type Mutation {
-    createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String]):Int!
+    createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String], images:[String]):Int!
   }
 `;
