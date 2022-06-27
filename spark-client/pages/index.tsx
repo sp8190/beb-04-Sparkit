@@ -3,24 +3,44 @@ import styled from "styled-components";
 
 import { gql, useQuery } from "@apollo/client";
 import { ARR } from "../config/mainMock";
-import { useEffect, useState } from "react";
-import { config } from './../../spark-server/src/config/config';
+import { useEffect, useState, useRef } from "react";
 
-interface HomeProps {
-  backgroundColor: string;
+import { useRouter } from "next/router";
+
+import LikeAndComment, {
+  MainListLikeButton,
+  MainListContentP,
+} from "../components/LikeAndComment";
+
+interface Hashtags {
+  id: number;
+  hashtag: string;
 }
 
-interface Posts {
+interface Comments {
+  post_id: number;
+  user_id: number;
+  commnet: string;
+  id: number;
+}
+
+interface Writer {
+  nickname: string;
+}
+
+interface Results {
+  getPosts: GetPosts[];
+}
+interface GetPosts {
   id: number;
   title: string;
-  postContent: string;
-  userId: number;
-  createdAt: string;
-}
-
-interface Result {
-  data: Posts;
-  loading: boolean;
+  post_content: string;
+  user_id: number;
+  created_at: string;
+  hashtags: Hashtags[];
+  comments: Comments[];
+  writer: Writer;
+  likes: number;
 }
 
 const ALL_POST = gql`
@@ -41,173 +61,185 @@ const ALL_POST = gql`
         comment
       }
       likes
+      writer {
+        nickname
+      }
     }
   }
 `;
 
+const GET_TAG_POST = gql`
+  query getTagPost($postId: String!) {
+    post(id: $postId) {
+      id
+      title
+      content
+      like @client
+    }
+  }
+`;
+
+const tags = ARR.map((item) => item.tag);
+
 const Home: NextPage = ({}) => {
-  const { data, loading } = useQuery<Result>(ALL_POST);
-  const [arr, setArr] = useState([]);
-  console.log(data);
+  const router = useRouter();
+  const { data, loading } = useQuery<Results>(ALL_POST);
+  const [io, setIo] = useState<IntersectionObserver | null>(null);
+  const endList = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {}, []);
+  const mainListDivClick = (id: number) => {
+    router.push(`/detail/${id}`);
+  };
 
-  // {
-  //   ARR.map((item, index) => {
-  //     return item.tag;
-  //   }).forEach((item)=>{
-  //     const result: Tags = {}
-  //     if(result[item])
-  //   });
-  // }
+  useEffect(() => {
+    const targetIO = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          console.log("hi");
+          if (io !== null) io.disconnect();
+        }
+      });
+    });
+    setIo(targetIO);
+  }, []);
+  io?.observe(endList.current as Element);
   return (
-    <HomeMain>
-      <HomeMainDiv>
-        <HomeAside>
-          <HomeAsideContainer>
-            <HomeAsideDiv backgroundColor="tomato">
-              <h4>공지사항</h4>
-              <ul>
-                <li>hi</li>
-                <li>hi2</li>
-              </ul>
-            </HomeAsideDiv>
-            <HomeAsideDiv backgroundColor="skyblue">
-              <nav>
-                <ul>
-                  <li>전체 태그</li>
-                </ul>
-              </nav>
-            </HomeAsideDiv>
-          </HomeAsideContainer>
-        </HomeAside>
-        <HomeSection>
-          <HomeMainHeadDiv>
-            <h1>전체 태그</h1>
-          </HomeMainHeadDiv>
-          <HomeMainUl>
-            {ARR.map((item, index) => {
-              return (
-                <HomeMainList key={`${item.id + index}`}>
-                  <p>
-                    <span>{item.userId}</span>
-                    <span>해시태그</span>
-                    <span>{item.createdAt}</span>
-                  </p>
-                  <HomeMainListDiv>
-                    <HomeMainListImgBox>img</HomeMainListImgBox>
-                    <HomeMainListContentBox>
-                      <p>{item.title}</p>
-                      <p>{item.postContent}</p>
-                      <p>
-                        <span>좋아요</span>
-                        <span>댓글</span>
-                      </p>
-                    </HomeMainListContentBox>
-                  </HomeMainListDiv>
-                </HomeMainList>
-              );
-            })}
-          </HomeMainUl>
-        </HomeSection>
-      </HomeMainDiv>
-    </HomeMain>
+    <Section>
+      <MainHeadDiv>
+        <h1>전체 태그</h1>
+      </MainHeadDiv>
+      <MainUl>
+        {!loading &&
+          data?.getPosts.map((item, index) => {
+            return (
+              <MainList key={`${item.id + index}`}>
+                <MainListP>
+                  <MainListSpan>{item.writer?.nickname ?? "test"}</MainListSpan>
+
+                  {item.hashtags.map((tag, idx) => {
+                    return (
+                      <MainListSpan key={tag.hashtag + idx}>
+                        {tag.hashtag}
+                      </MainListSpan>
+                    );
+                  })}
+
+                  <MainListTime>{item.created_at}</MainListTime>
+                </MainListP>
+                <MainListDiv>
+                  <MainListButton
+                    type="button"
+                    onClick={() => mainListDivClick(item.id)}
+                  >
+                    <MainListImgBox>img</MainListImgBox>
+                  </MainListButton>
+                  <MainListContentBox>
+                    <MainListButton
+                      type="button"
+                      onClick={() => mainListDivClick(item.id)}
+                    >
+                      <MainListContentP>{item.title}</MainListContentP>
+                      <MainListContentP>{item.post_content}</MainListContentP>
+                    </MainListButton>
+                    <LikeAndComment />
+                  </MainListContentBox>
+                </MainListDiv>
+              </MainList>
+            );
+          })}
+        <div ref={endList}></div>
+      </MainUl>
+    </Section>
   );
 };
 
 export default Home;
 
-const HomeMain = styled.main`
-  margin: 0 auto;
-  background-color: #393939;
-  color: #fafafa;
-  min-height: calc(100vh - 52px);
-  padding: 20px;
-  box-sizing: border-box;
-`;
-
-const HomeMainDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  max-width: 1400px;
-  margin: 40px auto 0;
-`;
-
-const HomeAside = styled.aside`
-  position: relative;
-  width: 20vw;
-  min-width: 250px;
-  max-width: 280px;
-`;
-
-const HomeSection = styled.section`
+const Section = styled.section`
   width: 60vw;
   padding: 20px;
+  margin-left: 12px;
   box-sizing: border-box;
+  min-height: calc(100vh - 80px);
 `;
 
-const HomeAsideContainer = styled.div`
-  position: fixed;
-  width: inherit;
-  min-width: 250px;
-  max-width: 280px;
-`;
-
-const HomeAsideDiv = styled.div<HomeProps>`
-  background-color: ${(props) => props.backgroundColor};
-  height: 300px;
-  border-radius: 2px;
-  margin: 20px 0;
-  padding: 12px;
-`;
-
-const HomeMainUl = styled.ul`
-  /* &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #2f3542;
-    border-radius: 10px;
-    height: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: grey;
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
-  } */
-  margin-left: 20px;
+const MainUl = styled.ul`
   width: 100%;
 `;
 
-const HomeMainList = styled.li`
+const MainList = styled.li`
   width: 100%;
   background-color: #595959;
-  height: 120px;
-  border-radius: 2px;
-  margin: 12px 0;
+  height: 140px;
+  border-radius: 4px;
+  margin-bottom: 24px;
   padding: 16px;
   box-sizing: border-box;
+  min-width: 430px;
+
+  &:hover {
+    box-shadow: 0.5px 0.5px 10px #55e696;
+  }
 `;
 
-const HomeMainListDiv = styled.div`
+const MainListButton = styled(MainListLikeButton)`
+  background-color: transparent;
+  cursor: pointer;
+  padding: 8px;
+`;
+
+const MainListP = styled.p`
+  > :first-child {
+    color: #ececec;
+    font-size: 18px;
+  }
+  > time {
+    &::before {
+      width: 10px;
+      height: 10px;
+      padding: 0 2px 0 4px;
+      content: "•";
+    }
+  }
+  span + span {
+    padding-left: 8px;
+  }
+`;
+
+const MainListSpan = styled.span`
+  color: #bbb;
+  font-size: 16px;
+`;
+
+const MainListTime = styled.time`
+  color: #bbb;
+  font-size: 14px;
+`;
+
+const MainListDiv = styled.div`
   display: flex;
-  margin-top: 12px;
+  align-items: center;
+  margin-top: 4px;
 `;
 
-const HomeMainListImgBox = styled.div`
+const MainListImgBox = styled.div`
   display: inline-block;
   width: 100px;
   height: 50px;
 `;
 
-const HomeMainListContentBox = styled.div`
+const MainListContentBox = styled.div`
   display: inline-block;
   width: 70%;
+
+  > :last-child {
+    border-top: 1px solid #aaa;
+  }
 `;
 
-const HomeMainHeadDiv = styled.div`
-  height: 60px;
+const MainHeadDiv = styled.div`
+  display: flex;
+  align-items: center;
+  height: 40px;
   padding: 10px 20px;
 `;
