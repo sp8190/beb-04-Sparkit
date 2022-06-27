@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
 
 //회원가입시 gql로
 //email, nickname, password, account , created_at , balance
@@ -27,11 +28,9 @@ const SIGN_UP = gql`
   }
 `;
 interface IFormValue {
-  name?: string;
   nickname?: string;
   email?: string;
   password?: string;
-  password_confirm?: string;
 }
 
 const Container = styled.div`
@@ -112,27 +111,6 @@ const Submit = styled.button`
     transition: 0.2s ease;
   }
 `;
-const SignSchema = yup
-  .object({
-    email: yup
-      .string()
-      .required("필수 입력값입니다")
-      .test("email", "이메일 형식에는 @가 필요합니다", (val: any) =>
-        /^\S+@\S+$/i.test(val)
-      ),
-    password: yup
-      .string()
-      .required("필수 입력값입니다")
-      .test("pw", "숫자 + 영문자 8자 이상 16자 이하입니다", (val: any) =>
-        /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}$/.test(val)
-      ),
-    passwordConfirm: yup
-      .string()
-      .required("필수 입력값입니다")
-      .oneOf([yup.ref("password")], "패스워드가 일치하지 않습니다"),
-    name: yup.string().required("필수 입력값입니다"),
-  })
-  .required();
 
 const SignUp: React.FC = () => {
   const {
@@ -141,60 +119,84 @@ const SignUp: React.FC = () => {
     watch,
     formState: { errors },
   } = useForm<IFormValue>({
-    //validation 적용
-    resolver: yupResolver(SignSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      nickname: "",
+    },
   });
 
-  const passwordRef = useRef<string | null>(null);
-
-  const [createUser, { data, loading, error }] = useMutation(SIGN_UP);
+  const [createUser, { data: user, loading, error }] = useMutation(SIGN_UP, {});
   const onSubmitHandler: SubmitHandler<IFormValue> = (data) => {
+    console.log("1234");
     console.log(data);
 
-    const { nickname, email, password } = data;
+    const { email, password, nickname } = data;
+    console.log(nickname, email, password);
     createUser({
       variables: {
-        email: email,
-        password: password,
-        nickname: nickname,
-        account: "string",
-        balance: "string",
-        private_key: "string",
+        user: {
+          email: email,
+          password: password,
+          nickname: nickname,
+          account: "string1234",
+          balance: "string1234",
+          private_key: "string1234",
+        },
       },
     }).catch((error) => {
-      console.log(error);
+      console.dir(error);
     });
   };
   return (
     <Container>
       <Title>Sign Up</Title>
-      <FormSubmit onSubmit={handleSubmit(onSubmitHandler)}>
-        <FormLabel>Nickname</FormLabel>
-        <FormInput
-          {...register("nickname", { required: true, maxLength: 20 })}
-        />
-        {errors.name && errors.name.type === "required" && (
-          <div>닉네임을 입력해 주세요!</div>
-        )}
-        {errors.name && errors.name.type === "maxLength" && (
-          <div>닉네임은 최대 20자만 입력할 수 있습니다!</div>
-        )}
+      <FormSubmit>
         <FormLabel>Email</FormLabel>
-        <FormInput {...register("email", { required: true })} type="email" />
+        <FormInput
+          {...register("email", {
+            required: "Email required",
+            pattern: {
+              value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: "It's not a valid email input",
+            },
+          })}
+          placeholder="Email"
+          type="email"
+          autoComplete="on"
+        />
+        {errors.email?.message && <div errorMessage={errors.email.message} />}
         <FormLabel>Password</FormLabel>
         <FormInput
-          {...register("password", { required: true })}
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 4,
+              message: "password must be more than 10 characters",
+            },
+          })}
           type="password"
+          autoComplete="on"
         />
-        <FormLabel>Password_confirm</FormLabel>
+        {/* <FormLabel>Password_confirm</FormLabel>
         <FormInput
           {...register("password_confirm", {
             required: true,
             validate: (value) => value === passwordRef.current,
           })}
           type="password"
+        /> */}
+        <FormLabel>Nickname</FormLabel>
+        <FormInput
+          {...register("nickname", { required: true, maxLength: 20 })}
         />
-        <Submit onClick={loading ? createUser : null}>가입하기</Submit>
+        {errors.nickname && errors.nickname.type === "required" && (
+          <div>닉네임을 입력해 주세요!</div>
+        )}
+        {errors.nickname && errors.nickname.type === "maxLength" && (
+          <div>닉네임은 최대 20자만 입력할 수 있습니다!</div>
+        )}
+        <Submit onSubmit={handleSubmit(onSubmitHandler)}>가입하기</Submit>
       </FormSubmit>
     </Container>
   );

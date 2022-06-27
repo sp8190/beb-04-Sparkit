@@ -7,7 +7,6 @@ import commentModel from "../../models/comment.model"
 import imageModel from "../../models/image.model"
 import {status} from "../../constants/code"
 import { sequelize } from '../../models/index';
-import { sendTokenToWriter } from '../../token/tokenUtil'
 
 type inputPost = {
     title:string,
@@ -162,10 +161,6 @@ export default {
                 })
                 
             } 
-
-            //TODO: 삭제
-            const dummyWriterAddress = '0x560091EeaFA23eDfa0Aa550fC8fb9300dCdF7207'
-            sendTokenToWriter(dummyWriterAddress)
 
             return post.id
         }
