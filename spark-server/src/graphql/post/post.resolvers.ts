@@ -7,7 +7,6 @@ import commentModel from "../../models/comment.model"
 import imageModel from "../../models/image.model"
 import {status} from "../../constants/code"
 import { sequelize } from '../../models/index';
-import { sendTokenToWriter } from '../../token/tokenUtil'
 
 type inputPost = {
     title:string,
