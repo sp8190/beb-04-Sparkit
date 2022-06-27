@@ -5,6 +5,7 @@ export default gql`
     id:Int,
     hashtag:String
   }
+
   type Query {
     getHashtags:[Hashtag]
   }

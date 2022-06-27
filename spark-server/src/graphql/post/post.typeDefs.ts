@@ -14,11 +14,13 @@ export default gql`
     likes:Int,
     images:[Image]
   }
+
   type User {
     id:Int,
     nickname:String,
     email:String
   }
+
   type Comment {
     id:Int,
     comment:String,
@@ -26,20 +28,24 @@ export default gql`
     user_id:Int
     writer:User
   }
+
   type Hashtag{
     id:Int,
     hashtag:String
   }
+
   type Image{
     id:Int,
     image_path:String,
     post_id:Int
   }
+
   type Query {
     getPosts:[Post]
     getPost(post_id:Int):Post
     getPostsByHashtag(hashtag_id:Int):[Post]
   }
+  
   type Mutation {
     createPost(title:String!, post_content:String!, user_id:Int, hashtags:[String], images:[String]):Int!
   }
