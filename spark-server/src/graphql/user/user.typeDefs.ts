@@ -8,7 +8,6 @@ export default gql`
     nickname:String,
     account:String,
     balance:String,
-
     private_key:String,
     created_at:String,
     updated_at:String
@@ -26,5 +25,4 @@ export default gql`
   type Query {
     hi: String
   }
-
 `;

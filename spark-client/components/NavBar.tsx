@@ -25,12 +25,31 @@ const NavContainer = styled.nav<Props>`
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 `;
 const NavLogo = styled.div`
+  padding-left: 10px;
   border: none;
   color: #55e696;
-  font-size: 1.5em;
-  font-weight: 500;
+  font-size: 1.9em;
+  font-weight: 600;
   transition: 0.2s;
+  animation: boxFades 3s 1s infinite linear alternate;
 
+  @keyframes boxFades {
+    0% {
+      color: white;
+    }
+    25% {
+      color: white;
+    }
+    50% {
+      color: #7ae4aa;
+    }
+    75% {
+      color: #55e696;
+    }
+    100% {
+      color: #55e696;
+    }
+  }
   :hover {
     font-weight: 600;
     opacity: 1;
@@ -83,7 +102,8 @@ const NavBar = (): ReactElement => {
 
   const router = useRouter();
   return (
-    <NavContainer position={router.pathname === "/SignUp" ? "relative" : "fixed"}
+    <NavContainer
+      position={router.pathname === "/SignUp" ? "relative" : "fixed"}
     >
       <NavLogo onClick={() => router.push("/")}>Spark it</NavLogo>
 

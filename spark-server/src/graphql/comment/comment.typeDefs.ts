@@ -6,6 +6,7 @@ export default gql`
     user_id:Int,
     comment:String
   }
+  
   type Mutation {
     createComment(post_id:Int, user_id:Int, comment:String):Int
   }
