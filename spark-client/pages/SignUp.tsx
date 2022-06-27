@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 //회원가입시 gql로
 //email, nickname, password, account , created_at , balance
 const SIGN_UP = gql`
@@ -25,7 +26,7 @@ const SIGN_UP = gql`
     )
   }
 `;
-interface FormValue {
+interface IFormValue {
   name?: string;
   nickname?: string;
   email?: string;
@@ -111,13 +112,13 @@ const Submit = styled.button`
     transition: 0.2s ease;
   }
 `;
-const SingUpschema = yup
+const SignSchema = yup
   .object({
-    id: yup
+    email: yup
       .string()
       .required("필수 입력값입니다")
-      .test("id", "4자 이상 12자 이하입니다", (val: any) =>
-        /^[a-z]+[a-z0-9]{3,11}$/g.test(val)
+      .test("email", "이메일 형식에는 @가 필요합니다", (val: any) =>
+        /^\S+@\S+$/i.test(val)
       ),
     password: yup
       .string()
@@ -139,26 +140,31 @@ const SignUp: React.FC = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormValue>({ resolver: yupResolver(SingUpschema) });
-  const [user, setUser] = useState(0);
-  // 비밀번호와 비밀번호 확인이 일치하는지 검증하기 위해 "password" input 의 value 를 추적함
-  const passwordRef = useRef<string | null>(null);
-
-  const [createUser, { data, loading, error }] = useMutation(SIGN_UP, {
-    variables: {
-      email: "test123@gmail.com",
-      password: "1234",
-      nickname: "123",
-      account: "238423904",
-      balance: "2348290",
-      private_key: "92038490234",
-    },
+  } = useForm<IFormValue>({
+    //validation 적용
+    resolver: yupResolver(SignSchema),
   });
 
-  const onSubmitHandler: SubmitHandler<FormValue> = (data) => {
-    console.log(data);
-  };
+  const passwordRef = useRef<string | null>(null);
 
+  const [createUser, { data, loading, error }] = useMutation(SIGN_UP);
+  const onSubmitHandler: SubmitHandler<IFormValue> = (data) => {
+    console.log(data);
+
+    const { nickname, email, password } = data;
+    createUser({
+      variables: {
+        email: email,
+        password: password,
+        nickname: nickname,
+        account: "string",
+        balance: "string",
+        private_key: "string",
+      },
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
   return (
     <Container>
       <Title>Sign Up</Title>
@@ -174,13 +180,10 @@ const SignUp: React.FC = () => {
           <div>닉네임은 최대 20자만 입력할 수 있습니다!</div>
         )}
         <FormLabel>Email</FormLabel>
-        <FormInput
-          {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
-          type="email"
-        />
+        <FormInput {...register("email", { required: true })} type="email" />
         <FormLabel>Password</FormLabel>
         <FormInput
-          {...register("password", { required: true, minLength: 6 })}
+          {...register("password", { required: true })}
           type="password"
         />
         <FormLabel>Password_confirm</FormLabel>
@@ -191,7 +194,7 @@ const SignUp: React.FC = () => {
           })}
           type="password"
         />
-        <Submit onClick={createUser}>가입하기</Submit>
+        <Submit onClick={loading ? createUser : null}>가입하기</Submit>
       </FormSubmit>
     </Container>
   );
