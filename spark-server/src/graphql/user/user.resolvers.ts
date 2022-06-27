@@ -18,6 +18,16 @@ type token = {
 }
 
 export default {
+    Query: {
+      async getUserInfo(_:any, args:{user_id:number}) {
+        let userInfo = await userModel.findOne({
+          where:{
+            id:args.user_id
+          }
+        })
+        return userInfo
+      }
+    },
     Mutation: {
       async createUser(_:any,args:user) {
         await userModel.create({ 
@@ -25,8 +35,7 @@ export default {
           password:args.password,
           nickname:args.nickname,
           account:args.account,
-          private_key:args.private_key,
-          balance:args.balance
+          private_key:args.private_key
         });
         return status.SUCCESS
       },

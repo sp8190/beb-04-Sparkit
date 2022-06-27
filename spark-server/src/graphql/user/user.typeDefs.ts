@@ -18,11 +18,11 @@ export default gql`
 
   }
   type Mutation {
-    createUser(email:String!, password:String!, nickname:String!, account:String!, balance:String!, private_key:String!):Boolean!
+    createUser(email:String!, password:String!, nickname:String!, account:String!, private_key:String!):Boolean!
     login(email:String!, password:String!):Token
   }
 
   type Query {
-    hi: String
+    getUserInfo(user_id:Int):User
   }
 `;
