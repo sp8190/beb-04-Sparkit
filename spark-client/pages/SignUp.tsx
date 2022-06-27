@@ -1,10 +1,12 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { typeFromAST } from "graphql";
+import { useRouter } from "next/router";
+import { em } from "polished";
 import { useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router-dom";
+import { createAccountMutation } from "../mutations/__generated__/createAccountMutation";
+import axios from "axios";
 
 //회원가입시 gql로
 //email, nickname, password, account , created_at , balance
@@ -113,40 +115,68 @@ const Submit = styled.button`
 `;
 
 const SignUp: React.FC = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<IFormValue>({
-    defaultValues: {
-      email: "",
-      password: "",
-      nickname: "",
-    },
+    mode: "onChange",
   });
+  const onComplete = (data: createAccountMutation) => {
+    const {
+      createAccount: { error, ok },
+    } = data;
+    if (ok) {
+      router.push("/");
+      alert("Account created! Log in now");
+    }
+    if (error) {
+      console.error(error);
+    }
+  };
 
-  const [createUser, { data: user, loading, error }] = useMutation(SIGN_UP, {});
-  const onSubmitHandler: SubmitHandler<IFormValue> = (data) => {
-    console.log("1234");
-    console.log(data);
+  //mutation 하면서 발생할 이벤트들
 
-    const { email, password, nickname } = data;
-    console.log(nickname, email, password);
-    createUser({
-      variables: {
-        user: {
+  //유저데이터값 받기
+  //데이터값은 useState객체로 받은 후 에 유저의 정보를 state 에 넣을것
+  //유저의 정보가 담긴 state값은 data에 저장되어 구조분해할당으로 넣을것.
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  //데이터값 검증
+  //데이터값 검증은 useState 검증하면서 동시에 이러줘야함 useFrom 훅을 이용해 자동으로검증
+  //+이메일 검증 과정 넣을것
+
+  //mutation으로 서버에 post요청
+  //gql 쿼리 변수 지정후 useMutation에 넣은후 에 variables에 객체 만들어서 넣기
+  //넣은후 onClick 이벤트를 통해 서버로 post 요청하기 이때 axios 사용해서 보내기
+
+  //성공 후 onComplete 함수실행 메인페이지로 이동시키기
+  //useMutation의 함수가 실행될 이벤트헨들러 생성후 안에 onComplete Mutation 생성하여
+  //성공한 결과를 서버로 보내기
+  //그후 router.push로 메인페이지로 보낼것
+
+  const [createUser, { data, loading, error }] = useMutation(SIGN_UP);
+  const onSubmit = (e: any) => {
+    console.log(e.target);
+    e.preventDefault();
+
+    if (!loading) {
+      console.log(e);
+      createUser({
+        variables: {
           email: email,
           password: password,
           nickname: nickname,
-          account: "string1234",
-          balance: "string1234",
-          private_key: "string1234",
+          account: "$account1",
+          balance: "0",
+          private_key: "123211231241241251231213123123",
         },
-      },
-    }).catch((error) => {
-      console.dir(error);
-    });
+      });
+    }
   };
   return (
     <Container>
@@ -162,8 +192,10 @@ const SignUp: React.FC = () => {
             },
           })}
           placeholder="Email"
-          type="email"
           autoComplete="on"
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
         />
         {errors.email?.message && <div errorMessage={errors.email.message} />}
         <FormLabel>Password</FormLabel>
@@ -175,8 +207,9 @@ const SignUp: React.FC = () => {
               message: "password must be more than 10 characters",
             },
           })}
-          type="password"
-          autoComplete="on"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
         />
         {/* <FormLabel>Password_confirm</FormLabel>
         <FormInput
@@ -189,6 +222,9 @@ const SignUp: React.FC = () => {
         <FormLabel>Nickname</FormLabel>
         <FormInput
           {...register("nickname", { required: true, maxLength: 20 })}
+          onChange={(e) => {
+            setNickname(e.target.value);
+          }}
         />
         {errors.nickname && errors.nickname.type === "required" && (
           <div>닉네임을 입력해 주세요!</div>
@@ -196,7 +232,10 @@ const SignUp: React.FC = () => {
         {errors.nickname && errors.nickname.type === "maxLength" && (
           <div>닉네임은 최대 20자만 입력할 수 있습니다!</div>
         )}
-        <Submit onSubmit={handleSubmit(onSubmitHandler)}>가입하기</Submit>
+
+        <Submit onClick={(e) => onSubmit(e)} type="submit">
+          가입하기
+        </Submit>
       </FormSubmit>
     </Container>
   );
