@@ -1,9 +1,20 @@
-import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { useState } from "react";
 
+import SEO from "../../components/SEO";
+
 import LikeAndComment from "../../components/LikeAndComment";
+
+import { darkTheme } from "../../styles/theme";
+
+interface Params {
+  params: { params: string[] };
+}
+
+interface Props {
+  params: string[];
+}
 
 const GET_POST = gql`
   query getPost($postId: Int!) {
@@ -38,23 +49,23 @@ const PostUser = styled.div`
 `;
 const Content = styled.textarea``;
 const LikeBtn = styled.button``;
+
 const DetailContainer = styled.div`
-  width: 60%;
   padding: 20px;
-  margin-left: 12px;
   box-sizing: border-box;
   min-height: calc(100vh - 80px);
+  background-color: ${darkTheme.contentColor};
+  width: 100%;
+  border-radius: 4px;
 `;
 
 const PostContent = styled.div`
-  background-color: #595959;
   width: 100%;
 `;
 
 const PostHeader = styled.div`
-  background-color: #595959;
   border-bottom: 1px solid #797979;
-  padding: 30px 60px;
+  padding: 10px 20px;
   box-sizing: border-box;
   width: 100%;
 `;
@@ -63,10 +74,12 @@ const PostBody = styled(PostHeader)`
   border: none;
 `;
 
-export default function Post() {
+export default function Post({ params }: Props) {
   const [isLiked, setIsLiked] = useState(0);
-  const router = useRouter();
-  const { post_id } = router.query;
+
+  const [post_title, post_id] = params || [];
+  console.log(post_title, post_id, "dasdsa");
+
   const postId = Number(post_id);
   const {
     data,
@@ -91,21 +104,37 @@ export default function Post() {
     });
   };
   console.log(data, loading);
+  if (!data)
+    return (
+      <DetailContainer>
+        <div>Loading...</div>
+      </DetailContainer>
+    );
+  const { getPost } = data;
+  const { title } = getPost;
+  const { nickname } = getPost.writer ?? "nickname";
+  const { content } = getPost;
+  const { like } = getPost;
   return (
     <DetailContainer>
+      <SEO title={post_title} />
       <PostContent>
         <PostHeader>
-          <PostTitle>
-            {loading ? "Loading..." : `${data?.getPost?.title}`}
-          </PostTitle>
-          <PostUser>{data?.getPost?.writer.nickname}</PostUser>
+          <PostTitle>{title ?? "title"}</PostTitle>
+          <PostUser>{nickname}</PostUser>
         </PostHeader>
         <PostBody>
           <LikeAndComment />
         </PostBody>
       </PostContent>
-      <Content>{data?.getPost?.content}</Content>
-      <LikeBtn onClick={onClick}>{data?.post?.like ? 0 : isLiked}</LikeBtn>
+      <Content>{content ?? ""}</Content>
+      <LikeBtn onClick={onClick}>{like ? like : 0}</LikeBtn>
     </DetailContainer>
   );
+}
+
+export function getServerSideProps({ params: { params } }: Params) {
+  return {
+    props: { params },
+  };
 }

@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { ARR } from "../config/mainMock";
 import { useEffect, useState } from "react";
 
+import { darkTheme } from "../styles/theme";
+
 type Props = {
   children: React.ReactNode;
 };
@@ -84,7 +86,7 @@ const Home = (props: Props) => {
             </AsideDiv>
           </AsideContainer>
         </Aside>
-        {props.children}
+        <Section>{props.children}</Section>
       </MainDiv>
     </Main>
   );
@@ -92,9 +94,17 @@ const Home = (props: Props) => {
 
 export default Home;
 
+const Section = styled.section`
+  width: 60vw;
+  padding: 20px;
+  margin-left: 12px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 80px);
+`;
+
 const Main = styled.main`
   margin: 0 auto;
-  background-color: #393939;
+  background-color: ${darkTheme.bgColor};
   color: #fafafa;
   min-height: calc(100vh - 52px);
   padding: 20px;

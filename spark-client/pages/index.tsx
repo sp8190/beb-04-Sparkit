@@ -6,15 +6,22 @@ import { ARR } from "../config/mainMock";
 import { useEffect, useState, useRef } from "react";
 
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import LikeAndComment, {
   MainListLikeButton,
   MainListContentP,
 } from "../components/LikeAndComment";
 
+import { darkTheme } from "../styles/theme";
+
 interface Hashtags {
   id: number;
   hashtag: string;
+}
+
+interface LinkProps {
+  href: string;
 }
 
 interface Comments {
@@ -87,8 +94,8 @@ const Home: NextPage = ({}) => {
   const [io, setIo] = useState<IntersectionObserver | null>(null);
   const endList = useRef<HTMLDivElement>(null);
 
-  const mainListDivClick = (id: number) => {
-    router.push(`/detail/${id}`);
+  const mainListDivClick = (title: string, id: number) => {
+    router.push(`/detail/${title}/${id}`);
   };
 
   useEffect(() => {
@@ -104,7 +111,7 @@ const Home: NextPage = ({}) => {
   }, []);
   io?.observe(endList.current as Element);
   return (
-    <Section>
+    <>
       <MainHeadDiv>
         <h1>전체 태그</h1>
       </MainHeadDiv>
@@ -129,17 +136,25 @@ const Home: NextPage = ({}) => {
                 <MainListDiv>
                   <MainListButton
                     type="button"
-                    onClick={() => mainListDivClick(item.id)}
+                    onClick={() => mainListDivClick(item.title, item.id)}
                   >
                     <MainListImgBox>img</MainListImgBox>
                   </MainListButton>
                   <MainListContentBox>
                     <MainListButton
                       type="button"
-                      onClick={() => mainListDivClick(item.id)}
+                      onClick={() => mainListDivClick(item.title, item.id)}
                     >
-                      <MainListContentP>{item.title}</MainListContentP>
-                      <MainListContentP>{item.post_content}</MainListContentP>
+                      <MainListContentP>
+                        <Link href={`/detail/${item.title}/${item.id}`}>
+                          <LinkA>{item.title}</LinkA>
+                        </Link>
+                      </MainListContentP>
+                      <MainListContentP>
+                        <Link href={`/detail/${item.title}/${item.id}`}>
+                          <LinkA>{item.post_content}</LinkA>
+                        </Link>
+                      </MainListContentP>
                     </MainListButton>
                     <LikeAndComment />
                   </MainListContentBox>
@@ -149,19 +164,11 @@ const Home: NextPage = ({}) => {
           })}
         <div ref={endList}></div>
       </MainUl>
-    </Section>
+    </>
   );
 };
 
 export default Home;
-
-const Section = styled.section`
-  width: 60vw;
-  padding: 20px;
-  margin-left: 12px;
-  box-sizing: border-box;
-  min-height: calc(100vh - 80px);
-`;
 
 const MainUl = styled.ul`
   width: 100%;
@@ -169,7 +176,7 @@ const MainUl = styled.ul`
 
 const MainList = styled.li`
   width: 100%;
-  background-color: #595959;
+  background-color: ${darkTheme.contentColor};
   height: 140px;
   border-radius: 4px;
   margin-bottom: 24px;
@@ -242,4 +249,8 @@ const MainHeadDiv = styled.div`
   align-items: center;
   height: 40px;
   padding: 10px 20px;
+`;
+
+const LinkA = styled.a`
+  text-decoration: none;
 `;

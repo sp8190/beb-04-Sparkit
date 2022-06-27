@@ -11,6 +11,7 @@ interface Props {
 const NavContainer = styled.nav<Props>`
   position: ${(props) => props.position};
   top: 0;
+  left: 0;
   display: flex;
   width: 100%;
   box-sizing: border-box;
