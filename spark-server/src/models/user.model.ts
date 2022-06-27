@@ -47,7 +47,8 @@ export default class users extends Model {
     @Column({
         type: DataType.STRING,
         unique:false,
-        allowNull: false
+        allowNull: false,
+        defaultValue: '0'
     })
     public balance: string;
 
