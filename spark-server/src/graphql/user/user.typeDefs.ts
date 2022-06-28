@@ -47,9 +47,7 @@ export default gql`
   }
 
   type Token {
-    access_token:String,
-    refresh_token:String
-
+    access_token:String
   }
   
   type Mutation {
@@ -58,6 +56,6 @@ export default gql`
   }
 
   type Query {
-    getUserInfo(user_id:Int):User
+    getUserInfo(user_id:Int, access_token:String):User
   }
 `;

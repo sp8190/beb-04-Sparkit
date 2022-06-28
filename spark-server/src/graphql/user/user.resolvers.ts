@@ -18,8 +18,7 @@ type user = {
 }
 
 type token = {
-  access_token:string,
-  refresh_token:string
+  access_token:string
 }
 
 export default {
@@ -76,7 +75,16 @@ export default {
       } 
     },
     Query: {
-      async getUserInfo(_:any, args:{user_id:number}) {
+      async getUserInfo(_:any, args:{user_id:number, access_token:string}) {
+        try {
+          const jwt = require('jsonwebtoken')
+          const decodedToken = jwt.verify(args.access_token, process.env.ACCESS_SECRET)
+          if(!decodedToken) {
+              return status.TOKEN_EXPIRED
+          }
+      }catch(e) {
+          return status.TOKEN_EXPIRED
+      }
         let userInfo = await userModel.findOne({
           where:{
             id:args.user_id
@@ -87,17 +95,18 @@ export default {
     },
     Mutation: {
       async createUser(_:any,args:user) {
-        let user = await userModel.create({ 
+        var reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+      	if(!reg.test(args.email)) return status.WRONG_USER_INFO
+        
+        await userModel.create({ 
           email:args.email,
           password:args.password,
           nickname:args.nickname,
           account:args.account,
           private_key:args.private_key
+
         });
-        //TODO: 테스트용 코드 -> 차후 성공 시 200 리턴으로 수정 예정
-        // return status.SUCCESS
-        let userId = user.id
-        return userId
+        return status.SUCCESS
       },
       async login(_:any, args:user){
         let user = await userModel.findOne({
@@ -109,22 +118,17 @@ export default {
         if(!user) {
           return status.WRONG_USER_INFO
         }
-        const jwt = require('jsonwebtoken')
+        const jwt = require('jsonwebtoken')        
         const accessToken = jwt.sign({
-          id:user.id,
-          email:user.email,
-          nickname:user.nickname,
-          account:user.account,
-          iat:new Date().getTime()/1000,
-          exp:1485270000000
-        }, process.env.ACCESS_SECRET)
-        const refreshToken = jwt.sign({
-          id:user.id,
-          email:user.email,
-          nickname:user.nickname,
-          account:user.account
-        }, process.env.REFRESH_SECRET)
-        return {"access_token":accessToken, "refresh_token":refreshToken}
+            id:user.id,
+            email:user.email,
+            nickname:user.nickname,
+            account:user.account
+          },
+          process.env.ACCESS_SECRET, 
+          {expiresIn:'1d'}
+        )
+        return {"access_token":accessToken}
       }
     }
   };
