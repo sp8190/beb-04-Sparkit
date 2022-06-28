@@ -16,7 +16,6 @@ const SIGN_UP = gql`
     $password: String!
     $nickname: String!
     $account: String!
-    $balance: String!
     $private_key: String!
   ) {
     createUser(
@@ -24,7 +23,6 @@ const SIGN_UP = gql`
       password: $password
       nickname: $nickname
       account: $account
-      balance: $balance
       private_key: $private_key
     )
   }
@@ -170,9 +168,8 @@ const SignUp: React.FC = () => {
           email: email,
           password: password,
           nickname: nickname,
-          account: "$account1",
-          balance: "0",
-          private_key: "123211231241241251231213123123",
+          account: "",
+          private_key: "",
         },
       });
     }
