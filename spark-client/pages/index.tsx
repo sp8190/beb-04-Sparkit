@@ -1,99 +1,47 @@
 import type { NextPage } from "next";
 import styled from "styled-components";
-
-import { gql, useQuery } from "@apollo/client";
-import { ARR } from "../config/mainMock";
+import Image, { ImageLoader } from "next/image";
 import { useEffect, useState, useRef } from "react";
-
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+import sparkLogo from "../assets/sparkLogo.png";
 import LikeAndComment, {
   MainListLikeButton,
   MainListContentP,
 } from "../components/LikeAndComment";
 
 import { darkTheme } from "../styles/theme";
+import { GiAbstract048 } from "react-icons/gi";
+import { useRecoilState } from "recoil";
+import { postsState } from "../states/spark";
 
-interface Hashtags {
-  id: number;
-  hashtag: string;
+// const GET_TAG_POST = gql`
+//   query getTagPost($postId: String!) {
+//     post(id: $postId) {
+//       id
+//       title
+//       content
+//       like @client
+//     }
+//   }
+// `;
+
+interface Loader {
+  src: string;
+  width: number;
+  quality: number;
 }
 
-interface LinkProps {
-  href: string;
-}
-
-interface Comments {
-  post_id: number;
-  user_id: number;
-  commnet: string;
-  id: number;
-}
-
-interface Writer {
-  nickname: string;
-}
-
-interface Results {
-  getPosts: GetPosts[];
-}
-interface GetPosts {
-  id: number;
-  title: string;
-  post_content: string;
-  user_id: number;
-  created_at: string;
-  hashtags: Hashtags[];
-  comments: Comments[];
-  writer: Writer;
-  likes: number;
-}
-
-const ALL_POST = gql`
-  query GetPosts {
-    getPosts {
-      id
-      title
-      post_content
-      user_id
-      created_at
-      hashtags {
-        id
-        hashtag
-      }
-      comments {
-        post_id
-        user_id
-        comment
-      }
-      likes
-      writer {
-        nickname
-      }
-    }
-  }
-`;
-
-const GET_TAG_POST = gql`
-  query getTagPost($postId: String!) {
-    post(id: $postId) {
-      id
-      title
-      content
-      like @client
-    }
-  }
-`;
-
-const tags = ARR.map((item) => item.tag);
+const myLoader = ({ src, width, quality }: Loader) => {
+  return `http://localhost:3000/${src}?w=${width}&q=${quality || 75}`;
+};
 
 const Home: NextPage = ({}) => {
   const router = useRouter();
-  const { data, loading } = useQuery<Results>(ALL_POST);
+  const [postData] = useRecoilState(postsState);
   const [io, setIo] = useState<IntersectionObserver | null>(null);
   const endList = useRef<HTMLDivElement>(null);
-
   const mainListDivClick = (title: string, id: number) => {
     router.push(`/detail/${title}/${id}`);
   };
@@ -102,8 +50,8 @@ const Home: NextPage = ({}) => {
     const targetIO = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          console.log("hi");
           if (io !== null) io.disconnect();
+          console.log("hi");
         }
       });
     });
@@ -116,13 +64,17 @@ const Home: NextPage = ({}) => {
         <h1>전체 태그</h1>
       </MainHeadDiv>
       <MainUl>
-        {!loading &&
-          data?.getPosts.map((item, index) => {
+        {postData &&
+          postData?.map((item, index) => {
+            let { title } = item;
+            title = title ?? "spark";
             return (
               <MainList key={`${item.id + index}`}>
                 <MainListP>
+                  <MainListSpan>
+                    <GiAbstract048 />
+                  </MainListSpan>
                   <MainListSpan>{item.writer?.nickname ?? "test"}</MainListSpan>
-
                   {item.hashtags.map((tag, idx) => {
                     return (
                       <MainListSpan key={tag.hashtag + idx}>
@@ -130,28 +82,34 @@ const Home: NextPage = ({}) => {
                       </MainListSpan>
                     );
                   })}
-
                   <MainListTime>{item.created_at}</MainListTime>
                 </MainListP>
                 <MainListDiv>
-                  <MainListButton
-                    type="button"
-                    onClick={() => mainListDivClick(item.title, item.id)}
-                  >
-                    <MainListImgBox>img</MainListImgBox>
-                  </MainListButton>
+                  <MainListImgBox>
+                    <Link href={`/detail/${title}/${item.id}`}>
+                      <LinkA>
+                        <Image
+                          loader={myLoader as ImageLoader}
+                          src={sparkLogo}
+                          alt="logo image"
+                          width={120}
+                          height={120}
+                        />
+                      </LinkA>
+                    </Link>
+                  </MainListImgBox>
                   <MainListContentBox>
                     <MainListButton
                       type="button"
-                      onClick={() => mainListDivClick(item.title, item.id)}
+                      onClick={() => mainListDivClick(title, item.id)}
                     >
                       <MainListContentP>
-                        <Link href={`/detail/${item.title}/${item.id}`}>
+                        <Link href={`/detail/${title}/${item.id}`}>
                           <LinkA>{item.title}</LinkA>
                         </Link>
                       </MainListContentP>
                       <MainListContentP>
-                        <Link href={`/detail/${item.title}/${item.id}`}>
+                        <Link href={`/detail/${title}/${item.id}`}>
                           <LinkA>{item.post_content}</LinkA>
                         </Link>
                       </MainListContentP>
@@ -162,13 +120,17 @@ const Home: NextPage = ({}) => {
               </MainList>
             );
           })}
-        <div ref={endList}></div>
+        <div ref={endList} style={{ height: "20px" }}></div>
       </MainUl>
     </>
   );
 };
 
 export default Home;
+
+const LogoImg = styled.img`
+  width: 40px;
+`;
 
 const MainUl = styled.ul`
   width: 100%;
@@ -177,7 +139,6 @@ const MainUl = styled.ul`
 const MainList = styled.li`
   width: 100%;
   background-color: ${darkTheme.contentColor};
-  height: 140px;
   border-radius: 4px;
   margin-bottom: 24px;
   padding: 16px;
@@ -185,7 +146,7 @@ const MainList = styled.li`
   min-width: 430px;
 
   &:hover {
-    box-shadow: 0.5px 0.5px 10px #55e696;
+    box-shadow: 0.5px 0.5px 10px ${darkTheme.accentColor};
   }
 `;
 
@@ -196,11 +157,13 @@ const MainListButton = styled(MainListLikeButton)`
 `;
 
 const MainListP = styled.p`
-  > :first-child {
+  display: flex;
+  > :nth-child(2) {
     color: #ececec;
     font-size: 18px;
   }
   > time {
+    line-height: 19px;
     &::before {
       width: 10px;
       height: 10px;
@@ -231,8 +194,7 @@ const MainListDiv = styled.div`
 
 const MainListImgBox = styled.div`
   display: inline-block;
-  width: 100px;
-  height: 50px;
+  padding: 8px;
 `;
 
 const MainListContentBox = styled.div`
@@ -253,4 +215,5 @@ const MainHeadDiv = styled.div`
 
 const LinkA = styled.a`
   text-decoration: none;
+  cursor: pointer;
 `;

@@ -19,6 +19,7 @@ const NavContainer = styled.nav<Props>`
   background-color: #000000ef;
   align-items: center;
   gap: 10px;
+  z-index: 1;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;

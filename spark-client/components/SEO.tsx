@@ -6,7 +6,7 @@ interface Props {
 export default function SEO({ title }: Props) {
   return (
     <Head>
-      <title>{title} | Next Movies</title>
+      <title>{title} | Spark It</title>
     </Head>
   );
 }
