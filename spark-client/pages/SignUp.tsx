@@ -33,6 +33,7 @@ interface IFormValue {
   nickname?: string;
   email?: string;
   password?: string;
+  password_confirm?: string;
 }
 
 const Container = styled.div`
@@ -118,7 +119,6 @@ const SignUp: React.FC = () => {
   const router = useRouter();
   const {
     register,
-    handleSubmit,
     watch,
     formState: { errors },
   } = useForm<IFormValue>({
@@ -186,7 +186,7 @@ const SignUp: React.FC = () => {
           {...register("email", {
             required: "Email required",
             pattern: {
-              value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
               message: "It's not a valid email input",
             },
           })}
@@ -210,14 +210,14 @@ const SignUp: React.FC = () => {
             setPassword(e.target.value);
           }}
         />
-        {/* <FormLabel>Password_confirm</FormLabel>
+        <FormLabel>Password_confirm</FormLabel>
         <FormInput
           {...register("password_confirm", {
             required: true,
-            validate: (value) => value === passwordRef.current,
+            validate: (value) => value === password,
           })}
           type="password"
-        /> */}
+        />
         <FormLabel>Nickname</FormLabel>
         <FormInput
           {...register("nickname", { required: true, maxLength: 20 })}
