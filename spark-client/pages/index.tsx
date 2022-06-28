@@ -16,6 +16,8 @@ import { GiAbstract048 } from "react-icons/gi";
 import { useRecoilState } from "recoil";
 import { postsState } from "../states/spark";
 
+import Layout from "../components/Layout";
+
 // const GET_TAG_POST = gql`
 //   query getTagPost($postId: String!) {
 //     post(id: $postId) {
@@ -59,7 +61,7 @@ const Home: NextPage = ({}) => {
   }, []);
   io?.observe(endList.current as Element);
   return (
-    <>
+    <Layout>
       <MainHeadDiv>
         <h1>전체 태그</h1>
       </MainHeadDiv>
@@ -122,7 +124,7 @@ const Home: NextPage = ({}) => {
           })}
         <div ref={endList} style={{ height: "20px" }}></div>
       </MainUl>
-    </>
+    </Layout>
   );
 };
 
