@@ -141,7 +141,6 @@ const SignUp: React.FC = () => {
 
   //유저데이터값 받기
   //데이터값은 useState객체로 받은 후 에 유저의 정보를 state 에 넣을것
-  //유저의 정보가 담긴 state값은 data에 저장되어 구조분해할당으로 넣을것.
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
