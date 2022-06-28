@@ -20,7 +20,12 @@ export default function WritePost() {
 
 
     const handleClick = () => {
-        let hashtags = hash.split(" ");
+        // 해시태그 #으로 구분
+        let hashtags = hash.split("#");
+        hashtags = hashtags.filter(
+            (element, i) => element != ""
+          );
+
         console.log("제목: ",title)
         console.log("컨텐츠: ",content)
         console.log("해시태그: ",hashtags)
@@ -35,6 +40,7 @@ export default function WritePost() {
          } });
         console.log("전송완료!")
     };
+    
     const sendFileToIPFS = async (f: any) => {
       if (f) {
         const formData = new FormData();

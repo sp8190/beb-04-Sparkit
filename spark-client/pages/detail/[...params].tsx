@@ -92,6 +92,8 @@ export default function Post({ params }: Props) {
       postId,
     },
   });
+
+  
   const onClick = () => {
     cache.writeFragment({
       id: `posts:${post_id}`,
