@@ -1,5 +1,4 @@
 import { gql } from 'apollo-server-express';
-import images from '../../models/image.model';
 
 export default gql`
   type Post {
