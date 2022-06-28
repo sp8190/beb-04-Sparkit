@@ -8,13 +8,15 @@ import imageModel from "../../models/image.model"
 import {status} from "../../constants/code"
 import { sequelize } from '../../models/index';
 import { sendTokenToWriter } from '../../token/tokenUtil'
+import { verifyAccessToken } from '../../utils/jwt';
 
 type inputPost = {
     title:string,
     post_content:string,
     user_id:number,
     hashtags:[string],
-    images:[string]
+    images:[string],
+    access_token:string
 }
 
 type post = {
@@ -126,6 +128,10 @@ export default {
     },
     Mutation: {
         async createPost(_:any, args:inputPost) {
+            if(!verifyAccessToken(args.access_token)){
+                return status.TOKEN_EXPIRED
+            }
+
             let post = await postModel.create({
                 title:args.title,
                 post_content:args.post_content,
