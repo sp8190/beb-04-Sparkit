@@ -8,6 +8,8 @@ import LikeAndComment from "../../components/LikeAndComment";
 
 import { darkTheme } from "../../styles/theme";
 
+import Layout from "../../components/Layout";
+
 interface Params {
   params: { params: string[] };
 }
@@ -116,20 +118,22 @@ export default function Post({ params }: Props) {
   const { content } = getPost;
   const { like } = getPost;
   return (
-    <DetailContainer>
-      <SEO title={post_title} />
-      <PostContent>
-        <PostHeader>
-          <PostTitle>{title ?? "title"}</PostTitle>
-          <PostUser>{nickname}</PostUser>
-        </PostHeader>
-        <PostBody>
-          <LikeAndComment />
-        </PostBody>
-      </PostContent>
-      <Content>{content ?? ""}</Content>
-      <LikeBtn onClick={onClick}>{like ? like : 0}</LikeBtn>
-    </DetailContainer>
+    <Layout>
+      <DetailContainer>
+        <SEO title={post_title} />
+        <PostContent>
+          <PostHeader>
+            <PostTitle>{title ?? "title"}</PostTitle>
+            <PostUser>{nickname}</PostUser>
+          </PostHeader>
+          <PostBody>
+            <LikeAndComment />
+          </PostBody>
+        </PostContent>
+        <Content>{content ?? ""}</Content>
+        <LikeBtn onClick={onClick}>{like ? like : 0}</LikeBtn>
+      </DetailContainer>
+    </Layout>
   );
 }
 
