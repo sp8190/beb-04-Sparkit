@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { GrEdit } from "react-icons/gr";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { GetPosts } from "../types/spark";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { GetPostsByUserId } from "../types/spark";
+
+import { useRecoilState } from "recoil";
+import { userIdState } from "../states/spark";
 
 export const MainListContentP = styled.p`
   padding: 4px 0 8px;
@@ -67,19 +71,33 @@ const LIKEIT = gql`
   }
 `;
 
+const USER_INFO = gql`
+  query GetUserInfo($userId: Int, $accessToken: String) {
+    getUserInfo(user_id: $userId, access_token: $accessToken) {
+      id
+    }
+  }
+`;
+
 const LikeAndComment = ({ postData }: Props) => {
-  console.log(postData.likes, "dsanlkdnsaldnklsan");
   const { likes } = postData;
-  console.log(likes);
   const accessToken = window.sessionStorage.getItem("userInfo");
-  const [createLikes, { data, loading, error }] = useMutation(LIKEIT);
+
+  const [createLikes] = useMutation<GetPostsByUserId>(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
-  const [postLikes, setPostLikes] = useState(0);
+  const [postLikes, setPostLikes] = useState(likes.length);
+  const [userId] = useRecoilState(userIdState);
+
+  useLayoutEffect(() => {
+    const likesUserIds = likes.map((item) => item.user_id);
+    setIsLikeClicked(likesUserIds.includes(userId));
+  }, []);
+
   const LikeVotting = () => {
     setPostLikes((prev) => (prev += 1));
     const args = {
       post_id: postData.id,
-      user_id: postData.user_id,
+      user_id: userId,
       access_token: accessToken,
     };
     createLikes({ variables: args });
@@ -89,7 +107,6 @@ const LikeAndComment = ({ postData }: Props) => {
     setIsLikeClicked(true);
     LikeVotting();
   };
-
   return (
     <MainListContentP>
       <MainListLikeButton type="button" onClick={handleLikeButtonClick}>

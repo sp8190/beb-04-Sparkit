@@ -18,6 +18,10 @@ export interface Writer {
   nickname: string;
 }
 
+export interface GetPostsByUserId {
+  getUserInfo: UserInfo;
+}
+
 export interface GetPosts {
   id: number;
   title: string;
