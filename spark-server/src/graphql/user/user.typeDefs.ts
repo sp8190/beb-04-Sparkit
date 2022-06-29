@@ -23,8 +23,14 @@ export default gql`
     hashtags:[Hashtag],
     comments:[Comment],
     writer:User,
-    likes:Int,
+    likes:[Like],
     images:[Image]
+  }
+
+  type Like {
+    id:Int,
+    post_id:Int,
+    user_id:Int
   }
 
   type Comment {
