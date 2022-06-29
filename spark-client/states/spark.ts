@@ -1,34 +1,34 @@
-import { atom } from "recoil";
+import { atom } from 'recoil'
 
 interface Comments {
-  post_id: number;
-  user_id: number;
-  commnet: string;
-  id: number;
+  post_id: number
+  user_id: number
+  commnet: string
+  id: number
 }
 
 interface Hashtags {
-  id: number;
-  hashtag: string;
+  id: number
+  hashtag: string
 }
 
 interface Writer {
-  nickname: string;
+  nickname: string
 }
 
 interface GetPosts {
-  id: number;
-  title: string;
-  post_content: string;
-  user_id: number;
-  created_at: string;
-  hashtags: Hashtags[];
-  comments: Comments[];
-  writer: Writer;
-  likes: number;
+  id: number
+  title: string
+  post_content: string
+  user_id: number
+  created_at: string
+  hashtags: Hashtags[]
+  comments: Comments[]
+  writer: Writer
+  likes: number
 }
 
 export const postsState = atom<GetPosts[]>({
-  key: "postsState",
+  key: 'postsState',
   default: [],
-});
+})

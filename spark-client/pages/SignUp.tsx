@@ -3,24 +3,14 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
-
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { sha256 } from "js-sha256";
 //회원가입시 gql로
 //email, nickname, password, account , created_at , balance
 const SIGN_UP = gql`
-  mutation CreateUser(
-    $email: String!
-    $password: String!
-    $nickname: String!
-    $account: String!
-    $private_key: String!
-  ) {
-    createUser(
-      email: $email
-      password: $password
-      nickname: $nickname
-      account: $account
-      private_key: $private_key
-    )
+  mutation CreateUser($email: String!, $password: String!, $nickname: String!) {
+    createUser(email: $email, password: $password, nickname: $nickname)
   }
 `;
 interface IFormValue {
@@ -110,7 +100,7 @@ const Submit = styled.button`
 `;
 
 const SignUp: React.FC = () => {
-  //검증스키마
+  // 검증스키마
   // const schema = yup.object().shape({
   //   email: yup.string().email().required(),
   //   name: yup.string().required(),
@@ -123,7 +113,6 @@ const SignUp: React.FC = () => {
 
   const {
     register,
-    watch,
     formState: { errors },
   } = useForm<IFormValue>({
     mode: "onChange",
@@ -176,8 +165,6 @@ const SignUp: React.FC = () => {
           email: email,
           password: password,
           nickname: nickname,
-          account: "",
-          private_key: "",
         },
       });
       onComplete();
@@ -217,14 +204,14 @@ const SignUp: React.FC = () => {
             setPassword(e.target.value);
           }}
         />
-        <FormLabel>Password_confirm</FormLabel>
+        {/* <FormLabel>Password_confirm</FormLabel>
         <FormInput
           {...register("password_confirm", {
             required: true,
             validate: (value) => value === password,
           })}
           type="password"
-        />
+        /> */}
         <FormLabel>Nickname</FormLabel>
         <FormInput
           {...register("nickname", { required: true, maxLength: 20 })}

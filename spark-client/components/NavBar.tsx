@@ -90,10 +90,36 @@ const SignPost = styled.a`
     opacity: 1;
   }
 `;
+const MyPage = styled.a`
+  padding: 10px;
+  transition: 0.2s;
+  :hover {
+    font-weight: 600;
+    opacity: 1;
+  }
+`;
+const Logout = styled.a`
+  padding: 10px;
+  transition: 0.2s;
+  :hover {
+    font-weight: 600;
+    opacity: 1;
+  }
+`;
 
 const NavBar = (): ReactElement => {
   const [showSignIn, setshowSignIn] = useState<boolean>(false);
   const [showSignUp, setshowSignUp] = useState<boolean>(false);
+  const [log, setLog] = useState<boolean>(false);
+  let isLoggedIn;
+  useEffect(() => {
+    isLoggedIn = window.sessionStorage.getItem("userInfo");
+    if (!isLoggedIn) {
+      setLog(false);
+    } else {
+      setLog(true);
+    }
+  }, []);
 
   function openSignin() {
     setshowSignIn(!showSignIn);
@@ -102,20 +128,31 @@ const NavBar = (): ReactElement => {
   function closeSignin() {
     setshowSignIn(!showSignIn);
   }
-
+  function logout() {
+    router.push("./");
+    setLog(false);
+    isLoggedIn = window.sessionStorage.clear();
+  }
   const router = useRouter();
   return (
     <NavContainer
       position={router.pathname === "/SignUp" ? "relative" : "fixed"}
     >
       <NavLogo onClick={() => router.push("/")}>Spark it</NavLogo>
-
-      <BtnContainer>
-        <SignInBtn onClick={openSignin}>로그인</SignInBtn>
-        <SignInModal open={showSignIn} close={closeSignin} />
-        <SignUpBtn onClick={() => router.push("/SignUp")}>회원가입</SignUpBtn>
-        <SignPost onClick={() => router.push("./WritePost")}>글쓰기</SignPost>
-      </BtnContainer>
+      {log ? (
+        <BtnContainer>
+          <MyPage onClick={() => router.push("./Mypage")}>마이페이지</MyPage>
+          <SignPost onClick={() => router.push("./WritePost")}>글쓰기</SignPost>
+          <Logout onClick={logout}>로그아웃</Logout>
+        </BtnContainer>
+      ) : (
+        <BtnContainer>
+          <SignInBtn onClick={openSignin}>로그인</SignInBtn>
+          <SignInModal open={showSignIn} close={closeSignin} />
+          <SignUpBtn onClick={() => router.push("/SignUp")}>회원가입</SignUpBtn>
+          <SignPost onClick={() => router.push("./WritePost")}>글쓰기</SignPost>
+        </BtnContainer>
+      )}
     </NavContainer>
   );
 };
