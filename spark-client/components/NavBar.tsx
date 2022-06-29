@@ -151,10 +151,9 @@ const NavBar = (): ReactElement => {
           <SignInBtn onClick={openSignin}>로그인</SignInBtn>
           <SignInModal open={showSignIn} close={closeSignin} />
           <SignUpBtn onClick={() => router.push("/SignUp")}>회원가입</SignUpBtn>
-          <SignPost onClick={() => router.push("./WritePost")}>글쓰기</SignPost>
+          <SignPost onClick={() => router.push("/WritePost")}>글쓰기</SignPost>
         </BtnContainer>
       )}
-
     </NavContainer>
   );
 };
