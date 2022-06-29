@@ -27,7 +27,13 @@ export interface GetPosts {
   hashtags: Hashtags[];
   comments: Comments[];
   writer: Writer;
-  likes: number;
+  likes: Likes[];
+}
+
+export interface Likes {
+  id: number;
+  user_id: number;
+  post_id: number;
 }
 
 export interface BackColor {
