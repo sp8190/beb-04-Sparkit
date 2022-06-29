@@ -87,6 +87,13 @@ export default {
       })
       return userInfo
     },
+    async getUserId(_: any, args: { user_id: number }) {
+      let userId = await userModel.findOne({
+        where:{
+          id:args.user_id,
+        },
+      })
+      return userId
   },
   Mutation: {
     async createUser(_: any, { email, password, nickname }: user) {

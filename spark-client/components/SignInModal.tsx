@@ -25,7 +25,7 @@ const OrderModal = (props: props): ReactElement => {
   const { open, close } = props;
   const [login_id, setLogin_id] = useState("");
   const [login_pw, setLogin_pw] = useState("");
-  const [, setUserId] = useRecoilState(userIdState);
+  const [userId, setUserId] = useRecoilState(userIdState);
 
   const [login, { data, loading, error }] = useMutation(LOGIN);
   const router = useRouter();
@@ -60,6 +60,7 @@ const OrderModal = (props: props): ReactElement => {
           "userInfo",
           JSON.stringify(appdata.data.login.access_token)
         );
+        window.sessionStorage.setItem("userId", appdata.data.id);
         settingUserId(appdata.data.login.access_token);
         location.reload();
       }

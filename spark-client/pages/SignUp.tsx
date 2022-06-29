@@ -185,7 +185,6 @@ const SignUp: React.FC = () => {
             },
           })}
           placeholder="Email"
-          autoComplete="on"
           onChange={(e) => {
             setEmail(e.target.value);
           }}
