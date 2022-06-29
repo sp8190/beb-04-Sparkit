@@ -19,59 +19,50 @@ interface Props {
 }
 
 const GET_POST = gql`
-query getPost($post_id: Int!) {
-  getPost(post_id: $post_id) {
-    id
-    title
-    post_content
-    user_id
-    created_at
-    hashtags {
-      hashtag
-    }
-    comments {
-      post_id
+  query getPost($post_id: Int!) {
+    getPost(post_id: $post_id) {
+      id
+      title
+      post_content
       user_id
-      comment
-    }
-    writer {
-      nickname
-    }
-    images {
-      image_path
+      created_at
+      hashtags {
+        hashtag
+      }
+      comments {
+        post_id
+        user_id
+        comment
+      }
+      writer {
+        nickname
+      }
+      images {
+        image_path
+      }
     }
   }
-}
 `;
-
-
-
-
-
 
 const PostTitle = styled.h1`
   font-size: 36px;
 `;
 
-
 const PostUserCreate = styled.div`
-  
   font-size: 20px;
   margin-top: 30px;
 
-  .user{
-    float:left;
+  .user {
+    float: left;
   }
-  .create{
+  .create {
     display: flex;
-    float:right;
+    float: right;
   }
-
 `;
 
 // 사용자 올린 그림
 const PostImage = styled.div`
-
   margin-left: 20px;
   margin-top: 30px;
 `;
@@ -81,11 +72,9 @@ const PostBody = styled.div`
   font-size: 20px;
   margin-top: 30px;
   margin-left: 20px;
-  
 
-  .content{
+  .content {
     margin-top: 20px;
-
   }
 `;
 
@@ -94,7 +83,6 @@ const PostHash = styled.div`
   font-size: 10px;
   margin-top: 30px;
   margin-left: 20px;
-
 `;
 
 // 댓글 입력 칸
@@ -120,14 +108,13 @@ const DetailContainer = styled.div`
 
 const PostContent = styled.div`
   width: 100%;
-  .inner_line{
+  .inner_line {
     border-top: 1px solid #797979;
     margin-top: 30px;
   }
 `;
 
 const PostHeader = styled.div`
-
   padding: 10px 20px;
   box-sizing: border-box;
   width: 100%;
@@ -148,13 +135,16 @@ export default function Post({ params }: Props) {
   //console.log(postTitle, postId, "dasdsa");
 
   const post_id = Number(postId);
-  const {data, loading, client: { cache },} = useQuery(GET_POST, {
+  const {
+    data,
+    loading,
+    client: { cache },
+  } = useQuery(GET_POST, {
     variables: {
       post_id,
     },
   });
 
-  
   const onClick = () => {
     cache.writeFragment({
       id: `posts:${post_id}`,
@@ -177,21 +167,20 @@ export default function Post({ params }: Props) {
       </DetailContainer>
     );
 
-
   const { getPost } = data;
   const { title } = getPost;
   const { created_at } = getPost;
   const { nickname } = getPost.writer;
   const { post_content } = getPost;
   const { hashtag } = getPost.hashtags;
+
   //const { likes } = getPost;
   const { images } = getPost;
 
-  console.log(images)
-  images.map( (e: any) =>{
-    console.log(e.image_path)
-  })
-
+  console.log(images);
+  images.map((e: any) => {
+    console.log(e.image_path);
+  });
 
   //console.log(getPost)
   return (
@@ -199,7 +188,6 @@ export default function Post({ params }: Props) {
       <DetailContainer>
         <SEO title={postTitle} />
         <PostContent>
-
           <PostHeader>
             <PostTitle>{title}</PostTitle>
             <PostUserCreate>
@@ -211,12 +199,12 @@ export default function Post({ params }: Props) {
           <div className="inner_line"></div>
 
           <PostImage>
-          {images.map((token: any) => {
-                return (
-                    <div key={token}>           
-                        <img  src={token.image_path}/>
-                     </div>
-                );
+            {images.map((token: any) => {
+              return (
+                <div key={token}>
+                  <img src={token.image_path} />
+                </div>
+              );
             })}
           </PostImage>
 
@@ -225,24 +213,19 @@ export default function Post({ params }: Props) {
           </PostBody>
 
           <PostHash>
-          {hashtag.map((token: any) => {
-                return (
-                    <div key={token}>           
-                        {token}
-                     </div>
-                );
-            })}
+            {hashtag &&
+              hashtag.map((token: any) => {
+                return <div key={token}>{token}</div>;
+              })}
           </PostHash>
 
           <PostBottom>
-            <LikeAndComment />
+            <LikeAndComment postData={data} />
           </PostBottom>
-
         </PostContent>
 
         <Content></Content>
         <ContentBtn onClick={onClick}>입력</ContentBtn>
-        
       </DetailContainer>
     </Layout>
   );
