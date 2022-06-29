@@ -102,7 +102,6 @@ const UserTitleBox = styled.div`
   height: 30px;
   font-size: 1.8rem;
   margin-bottom: 25px;
-  transform: rotateX(100%);
 `;
 
 const UserInfoContainer = styled.div`
