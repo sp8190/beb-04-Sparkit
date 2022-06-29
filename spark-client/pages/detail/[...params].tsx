@@ -19,28 +19,29 @@ interface Props {
 }
 
 const GET_POST = gql`
-  query getPost($post_id: Int!) {
-    getPost(post_id: $post_id) {
-      id
-      title
-      post_content
+query getPost($post_id: Int!) {
+  getPost(post_id: $post_id) {
+    id
+    title
+    post_content
+    user_id
+    created_at
+    hashtags {
+      hashtag
+    }
+    comments {
+      post_id
       user_id
-      created_at
-      hashtags {
-        id
-        hashtag
-      }
-      comments {
-        post_id
-        user_id
-        comment
-      }
-      likes
-      writer {
-        nickname
-      }
+      comment
+    }
+    writer {
+      nickname
+    }
+    images {
+      image_path
     }
   }
+}
 `;
 
 
@@ -68,11 +69,19 @@ const PostUserCreate = styled.div`
 
 `;
 
+// 사용자 올린 그림
+const PostImage = styled.div`
+
+  margin-left: 20px;
+  margin-top: 30px;
+`;
+
+// post_content 사용자 작성 글
 const PostBody = styled.div`
   font-size: 20px;
   margin-top: 30px;
   margin-left: 20px;
-  border-top: 1px solid #797979;
+  
 
   .content{
     margin-top: 20px;
@@ -80,12 +89,25 @@ const PostBody = styled.div`
   }
 `;
 
-const Content = styled.textarea`
+// post_content 사용자 작성 글
+const PostHash = styled.div`
+  font-size: 10px;
+  margin-top: 30px;
   margin-left: 20px;
-  width: 90%;
 
 `;
-const LikeBtn = styled.button``;
+
+// 댓글 입력 칸
+const Content = styled.input`
+  margin-left: 10px;
+  width: 90%;
+  height: 50px;
+  border: 0;
+  outline: 0;
+`;
+const ContentBtn = styled.button`
+  margin-left: 5px;
+`;
 
 const DetailContainer = styled.div`
   padding: 20px;
@@ -98,6 +120,10 @@ const DetailContainer = styled.div`
 
 const PostContent = styled.div`
   width: 100%;
+  .inner_line{
+    border-top: 1px solid #797979;
+    margin-top: 30px;
+  }
 `;
 
 const PostHeader = styled.div`
@@ -131,7 +157,7 @@ export default function Post({ params }: Props) {
   
   const onClick = () => {
     cache.writeFragment({
-      id: `posts:${postId}`,
+      id: `posts:${post_id}`,
       fragment: gql`
         fragment postFragment on posts {
           like
@@ -157,9 +183,17 @@ export default function Post({ params }: Props) {
   const { created_at } = getPost;
   const { nickname } = getPost.writer;
   const { post_content } = getPost;
-  const { likes } = getPost;
+  const { hashtag } = getPost.hashtags;
+  //const { likes } = getPost;
+  const { images } = getPost;
 
-  console.log(getPost)
+  console.log(images)
+  images.map( (e: any) =>{
+    console.log(e.image_path)
+  })
+
+
+  //console.log(getPost)
   return (
     <Layout>
       <DetailContainer>
@@ -174,11 +208,31 @@ export default function Post({ params }: Props) {
             </PostUserCreate>
           </PostHeader>
 
+          <div className="inner_line"></div>
+
+          <PostImage>
+          {images.map((token: any) => {
+                return (
+                    <div key={token}>           
+                        <img  src={token.image_path}/>
+                     </div>
+                );
+            })}
+          </PostImage>
+
           <PostBody>
             <p className="content">{post_content}</p>
           </PostBody>
 
-          
+          <PostHash>
+          {hashtag.map((token: any) => {
+                return (
+                    <div key={token}>           
+                        {token}
+                     </div>
+                );
+            })}
+          </PostHash>
 
           <PostBottom>
             <LikeAndComment />
@@ -187,7 +241,7 @@ export default function Post({ params }: Props) {
         </PostContent>
 
         <Content></Content>
-        <LikeBtn onClick={onClick}>{likes ? likes : 0}</LikeBtn>
+        <ContentBtn onClick={onClick}>입력</ContentBtn>
         
       </DetailContainer>
     </Layout>
