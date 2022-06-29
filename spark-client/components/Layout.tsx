@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
-import Home from "./Home";
+import Main from "./Main";
 
 type Props = {
   children: React.ReactNode;
@@ -9,11 +9,9 @@ type Props = {
 export default function Layout(props: Props) {
   return (
     // width: 100% , padding: 0px
-    <div>
-      <Home>
-        <NavBar />
-        {props.children}
-      </Home>
-    </div>
+    <Main>
+      <NavBar />
+      {props.children}
+    </Main>
   );
 }

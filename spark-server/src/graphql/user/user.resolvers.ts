@@ -1,6 +1,13 @@
 import userModel from '../../models/user.model'
 import { status } from '../../constants/code'
-import {generateWallet} from '../../utils/wallet'
+
+import { generateWallet } from '../../utils/wallet'
+import postModel from '../../models/post.model'
+import imageModel from '../../models/image.model'
+import { sequelize } from '../../models/index'
+import commentModel from '../../models/comment.model'
+import likeModel from '../../models/like.model'
+
 const aes256 = require('aes256')
 type user = {
   id: number
@@ -19,6 +26,60 @@ type token = {
 }
 
 export default {
+  User: {
+    async posts(root: any) {
+      let posts = await postModel.findAll({
+        where: {
+          user_id: root.id,
+        },
+      })
+      return posts
+    },
+  },
+  Post: {
+    async hashtags(root: any) {
+      const getHashtagsQuery = `SELECT hashtags.* FROM hashtags, posts_hashtags where hashtags.id = posts_hashtags.hashtag_id and posts_hashtags.post_id = :post_id`
+      const getHashtagsValue = {
+        post_id: root.id,
+      }
+      const hashtags = await sequelize.query(getHashtagsQuery, {
+        replacements: getHashtagsValue,
+      })
+      return hashtags[0]
+    },
+    async comments(root: any) {
+      let comments = await commentModel.findAll({
+        where: {
+          post_id: root.id,
+        },
+      })
+      return comments
+    },
+    async writer(root: any) {
+      let userInfo = await userModel.findOne({
+        where: {
+          id: root.user_id,
+        },
+      })
+      return userInfo
+    },
+    async likes(root: any) {
+      let likeCount = await likeModel.count({
+        where: {
+          post_id: root.id,
+        },
+      })
+      return likeCount
+    },
+    async images(root: any) {
+      let images = await imageModel.findAll({
+        where: {
+          post_id: root.id,
+        },
+      })
+      return images
+    },
+  },
   Query: {
     async getUserInfo(_: any, args: { user_id: number }) {
       let userInfo = await userModel.findOne({
@@ -36,7 +97,10 @@ export default {
       const { publicKey, privateKey }: any = await generateWallet(password)
 
       //인코딩
-      const encryptedPrivateKey = aes256.encrypt(process.env.PRIVATE_KEY_SECRET, privateKey)
+      const encryptedPrivateKey = aes256.encrypt(
+        process.env.PRIVATE_KEY_SECRET,
+        privateKey,
+      )
 
       //유저가 회원가입하게 되면 aes256암호화를 통해 암호화됌
       let user = await userModel.create({
@@ -44,7 +108,7 @@ export default {
         password: password,
         nickname: nickname,
         account: publicKey,
-        private_key: encryptedPrivateKey
+        private_key: encryptedPrivateKey,
       })
 
       if (!user) {
@@ -71,12 +135,12 @@ export default {
           id: user.id,
           email: user.email,
           nickname: user.nickname,
-          account: user.account
+          account: user.account,
         },
         process.env.ACCESS_SECRET,
-        {expiresIn:'1d'}
+        { expiresIn: '1d' },
       )
-      return { "access_token": accessToken}
+      return { access_token: accessToken }
     },
   },
 }

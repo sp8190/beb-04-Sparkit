@@ -1,12 +1,8 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { typeFromAST } from "graphql";
 import { useRouter } from "next/router";
-import { em } from "polished";
 import { useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
-import { createAccountMutation } from "../mutations/__generated__/createAccountMutation";
-import axios from "axios";
 
 //회원가입시 gql로
 //email, nickname, password, account , created_at , balance
@@ -114,34 +110,45 @@ const Submit = styled.button`
 `;
 
 const SignUp: React.FC = () => {
-  const router = useRouter();
+  //검증스키마
+  // const schema = yup.object().shape({
+  //   email: yup.string().email().required(),
+  //   name: yup.string().required(),
+  //   pw: yup.string().min(4).max(12).required(),
+  //   checkPw: yup
+  //     .string()
+  //     .oneOf([yup.ref("pw"), null])
+  //     .required(),
+  // });
+
   const {
     register,
     watch,
     formState: { errors },
   } = useForm<IFormValue>({
     mode: "onChange",
+    // resolver: yupResolver(schema),
   });
-  const onComplete = (data: createAccountMutation) => {
-    const {
-      createAccount: { error, ok },
-    } = data;
-    if (ok) {
-      router.push("/");
-      alert("Account created! Log in now");
-    }
-    if (error) {
-      console.error(error);
-    }
-  };
-
-  //mutation 하면서 발생할 이벤트들
-
   //유저데이터값 받기
   //데이터값은 useState객체로 받은 후 에 유저의 정보를 state 에 넣을것
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const [complete, setComplete] = useState(false);
+
+  //완료시 알람과 함게 메인페이지로 이동
+  const router = useRouter();
+  const onComplete = () => {
+    if (!complete) {
+      router.push("/");
+      alert("Account created! Log in now");
+    }
+    if (complete) {
+      console.error(error);
+    }
+  };
+
+  //mutation 하면서 발생할 이벤트들
 
   //데이터값 검증
   //데이터값 검증은 useState 검증하면서 동시에 이러줘야함 useFrom 훅을 이용해 자동으로검증
@@ -163,6 +170,7 @@ const SignUp: React.FC = () => {
 
     if (!loading) {
       console.log(e);
+      setComplete(true);
       createUser({
         variables: {
           email: email,
@@ -172,7 +180,9 @@ const SignUp: React.FC = () => {
           private_key: "",
         },
       });
+      onComplete();
     }
+    return setComplete(false);
   };
   return (
     <Container>
@@ -183,7 +193,7 @@ const SignUp: React.FC = () => {
           {...register("email", {
             required: "Email required",
             pattern: {
-              value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              value: /^\S+@\S+$/i,
               message: "It's not a valid email input",
             },
           })}
@@ -193,16 +203,16 @@ const SignUp: React.FC = () => {
             setEmail(e.target.value);
           }}
         />
-        {errors.email?.message && <div errorMessage={errors.email.message} />}
         <FormLabel>Password</FormLabel>
         <FormInput
           {...register("password", {
-            required: "Password is required",
+            required: true,
             minLength: {
               value: 4,
-              message: "password must be more than 10 characters",
+              message: "password must be more than 4 characters",
             },
           })}
+          type="password"
           onChange={(e) => {
             setPassword(e.target.value);
           }}
