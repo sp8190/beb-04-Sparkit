@@ -121,15 +121,28 @@ interface Props {
 }
 
 const Aside = ({ setTitle }: Props) => {
-  const { data, refetch } = useQuery<Results>(ALL_POST);
-  const { data: data2 } = useQuery<ResultsHashTag>(ALL_POST_BY_HASHTAG, {
-    variables: { hashtagId: 34 },
-  });
   const [, setPostData] = useRecoilState(postsState);
   const [tags, setTags] = useState<Tags[]>([]);
   const [obj, setObj] = useState<Obj[]>([]);
-  const router = useRouter();
-  const { pathname } = router;
+  const [tagId, setTagId] = useState(0);
+  const { data, refetch } = useQuery<Results>(ALL_POST);
+  const { data: data2, refetch: refetch2 } = useQuery<ResultsHashTag>(
+    ALL_POST_BY_HASHTAG,
+    {
+      variables: { hashtagId: tagId },
+    }
+  );
+
+  useEffect(() => {
+    console.log(tagId);
+    refetch2();
+  }, [tagId]);
+
+  useEffect(() => {
+    if (!data2) return;
+    setPostData(data2.getPostsByHashtag);
+  }, [data2]);
+
   const sortTagCountArr = (arr: Obj[]) => {
     return arr.sort(function (a, b) {
       return b.count - a.count;
@@ -157,9 +170,8 @@ const Aside = ({ setTitle }: Props) => {
   };
 
   const handleTagClick = (item: number, name: string) => {
-    if (!data2) return;
-    setPostData(data2.getPostsByHashtag);
     setTitle(name);
+    setTagId(item);
   };
   const handleTagAllClick = () => {
     refetch();
