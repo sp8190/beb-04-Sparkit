@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 
 import { useRecoilState } from "recoil";
 import { userIdState } from "../states/spark";
@@ -27,7 +28,7 @@ const OrderModal = (props: props): ReactElement => {
   const [, setUserId] = useRecoilState(userIdState);
 
   const [login, { data, loading, error }] = useMutation(LOGIN);
-
+  const router = useRouter();
   const handleClick = () => {
     console.log("ID: ", login_id);
     console.log("PW: ", login_pw);
@@ -57,9 +58,11 @@ const OrderModal = (props: props): ReactElement => {
         close();
         window.sessionStorage.setItem(
           "userInfo",
-          appdata.data.login.access_token
+          JSON.stringify(appdata.data.login.access_token)
         );
         settingUserId(appdata.data.login.access_token);
+        location.reload();
+
       }
     });
   };
@@ -92,7 +95,7 @@ const OrderModal = (props: props): ReactElement => {
                 <label className="pw_text">PASSWORD</label>
                 <input
                   className="pw_input"
-                  type="text"
+                  type="password"
                   onChange={({ target: { value } }) => setLogin_pw(value)}
                   required
                 ></input>

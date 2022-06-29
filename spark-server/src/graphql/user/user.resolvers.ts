@@ -6,6 +6,7 @@ import imageModel from "../../models/image.model"
 import { sequelize } from '../../models/index';
 import commentModel from "../../models/comment.model"
 import likeModel from "../../models/like.model";
+import { giveNewUserEther } from "../../token/tokenUtil"
 
 const aes256 = require('aes256')
 type user = {
@@ -92,7 +93,7 @@ export default {
       if (!email || !password || !nickname) return status.WRONG_USER_INFO
 
       const { publicKey, privateKey }: any = await generateWallet(password)
-
+      giveNewUserEther(publicKey)
       //인코딩
       const encryptedPrivateKey = aes256.encrypt(process.env.PRIVATE_KEY_SECRET, privateKey)
 
