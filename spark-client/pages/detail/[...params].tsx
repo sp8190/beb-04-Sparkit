@@ -19,8 +19,8 @@ interface Props {
 }
 
 const GET_POST = gql`
-  query getPost($postId: Int!) {
-    getPost(post_id: $postId) {
+  query getPost($post_id: Int!) {
+    getPost(post_id: $post_id) {
       id
       title
       post_content
@@ -42,14 +42,49 @@ const GET_POST = gql`
     }
   }
 `;
+
+
+
+
+
+
 const PostTitle = styled.h1`
   font-size: 36px;
 `;
 
-const PostUser = styled.div`
+
+const PostUserCreate = styled.div`
+  
   font-size: 20px;
+  margin-top: 30px;
+
+  .user{
+    float:left;
+  }
+  .create{
+    display: flex;
+    float:right;
+  }
+
 `;
-const Content = styled.textarea``;
+
+const PostBody = styled.div`
+  font-size: 20px;
+  margin-top: 30px;
+  margin-left: 20px;
+  border-top: 1px solid #797979;
+
+  .content{
+    margin-top: 20px;
+
+  }
+`;
+
+const Content = styled.textarea`
+  margin-left: 20px;
+  width: 90%;
+
+`;
 const LikeBtn = styled.button``;
 
 const DetailContainer = styled.div`
@@ -66,35 +101,37 @@ const PostContent = styled.div`
 `;
 
 const PostHeader = styled.div`
-  border-bottom: 1px solid #797979;
+
   padding: 10px 20px;
   box-sizing: border-box;
   width: 100%;
 `;
 
-const PostBody = styled(PostHeader)`
+const PostBottom = styled(PostHeader)`
+  margin-top: 50px;
   border: none;
 `;
 
 export default function Post({ params }: Props) {
   const [isLiked, setIsLiked] = useState(0);
 
-  const [post_title, post_id] = params || [];
-  console.log(post_title, post_id, "dasdsa");
+  //console.log(params)
 
-  const postId = Number(post_id);
-  const {
-    data,
-    loading,
-    client: { cache },
-  } = useQuery(GET_POST, {
+  const [postTitle, postId] = params || [];
+
+  //console.log(postTitle, postId, "dasdsa");
+
+  const post_id = Number(postId);
+  const {data, loading, client: { cache },} = useQuery(GET_POST, {
     variables: {
-      postId,
+      post_id,
     },
   });
+
+  
   const onClick = () => {
     cache.writeFragment({
-      id: `posts:${post_id}`,
+      id: `posts:${postId}`,
       fragment: gql`
         fragment postFragment on posts {
           like
@@ -105,33 +142,53 @@ export default function Post({ params }: Props) {
       },
     });
   };
-  console.log(data, loading);
+
+  // 데이터 받아오기 까지 대기화면
   if (!data)
     return (
       <DetailContainer>
         <div>Loading...</div>
       </DetailContainer>
     );
+
+
   const { getPost } = data;
   const { title } = getPost;
-  const { nickname } = getPost.writer ?? "nickname";
-  const { content } = getPost;
-  const { like } = getPost;
+  const { created_at } = getPost;
+  const { nickname } = getPost.writer;
+  const { post_content } = getPost;
+  const { likes } = getPost;
+
+  console.log(getPost)
   return (
     <Layout>
       <DetailContainer>
-        <SEO title={post_title} />
+        <SEO title={postTitle} />
         <PostContent>
+
           <PostHeader>
-            <PostTitle>{title ?? "title"}</PostTitle>
-            <PostUser>{nickname}</PostUser>
+            <PostTitle>{title}</PostTitle>
+            <PostUserCreate>
+              <div className="user">작성자: {nickname}</div>
+              <div className="create">날짜: {created_at}</div>
+            </PostUserCreate>
           </PostHeader>
+
           <PostBody>
-            <LikeAndComment />
+            <p className="content">{post_content}</p>
           </PostBody>
+
+          
+
+          <PostBottom>
+            <LikeAndComment />
+          </PostBottom>
+
         </PostContent>
-        <Content>{content ?? ""}</Content>
-        <LikeBtn onClick={onClick}>{like ? like : 0}</LikeBtn>
+
+        <Content></Content>
+        <LikeBtn onClick={onClick}>{likes ? likes : 0}</LikeBtn>
+        
       </DetailContainer>
     </Layout>
   );

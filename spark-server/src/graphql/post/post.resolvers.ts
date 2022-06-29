@@ -51,6 +51,12 @@ type image = {
     post_id:number
 }
 
+type like = {
+    id:number,
+    post_id: number,
+    user_id: number
+}
+
 export default {
     Post: {
         async hashtags(root:any) {
@@ -78,12 +84,12 @@ export default {
             return userInfo
         },
         async likes(root:any) {
-            let likeCount = await likeModel.count({
+            let like = await likeModel.findAll({
                 where: {
                     post_id:root.id
                 }
             })
-            return likeCount
+            return like
         },
         async images(root:any) {
             let images = await imageModel.findAll({

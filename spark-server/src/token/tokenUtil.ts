@@ -13,7 +13,8 @@ require('dotenv').config()
 declare var process : {
     env: {
         INFURA_ENDPOINT: string,
-        SPARK_IT_TOKEN_ACCOUNT_SECRET_KEY: string
+        SPARK_IT_TOKEN_ACCOUNT_SECRET_KEY: string,
+        PRIVATE_KEY_SECRET: string
     }
 }
 
@@ -38,7 +39,9 @@ export async function voteToOtherUser(senderAccount:String, senderPrivateKey:Str
     const Web3 = require('web3');
     const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA_ENDPOINT)); 
     const contract = new web3.eth.Contract(SITokenABI, TOKEN_CONTRACT_ADDRESS, { from: TOKEN_CONTRACT_DEPLOYED_OWNER_ADDRESS, gas: GAS_FEE});
-    web3.eth.accounts.wallet.add(senderPrivateKey);
+     //디코딩
+    const decryptedPrivateKey = require('aes256').decrypt(process.env.PRIVATE_KEY_SECRET, senderPrivateKey)
+    web3.eth.accounts.wallet.add(decryptedPrivateKey);
     await contract.methods.transfer(receiverAccount, VOTING_TOKEN_AMOUNT).send({from: senderAccount, gas: GAS_FEE});
     updateUserBalance(senderUserId, senderAccount)
     updateUserBalance(receiverUserId, receiverAccount)
