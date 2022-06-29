@@ -23,8 +23,14 @@ export default gql`
     hashtags:[Hashtag],
     comments:[Comment],
     writer:User,
-    likes:Int,
+    likes:[Like],
     images:[Image]
+  }
+
+  type Like {
+    id:Int,
+    post_id:Int,
+    user_id:Int
   }
 
   type Comment {
@@ -51,7 +57,7 @@ export default gql`
   }
   
   type Mutation {
-    createUser(email:String!, password:String!, nickname:String!, account:String!, private_key:String!):Int!
+    createUser(email:String!, password:String!, nickname:String!):Int!
     login(email:String!, password:String!):Token
   }
 
