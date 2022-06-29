@@ -1,13 +1,8 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { typeFromAST } from "graphql";
 import { useRouter } from "next/router";
-import { em } from "polished";
 import { useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
-import { createAccountMutation } from "../mutations/__generated__/createAccountMutation";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 //회원가입시 gql로
 //email, nickname, password, account , created_at , balance
