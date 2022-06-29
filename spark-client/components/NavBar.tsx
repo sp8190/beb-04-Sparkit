@@ -139,6 +139,7 @@ const NavBar = (): ReactElement => {
       position={router.pathname === "/SignUp" ? "relative" : "fixed"}
     >
       <NavLogo onClick={() => router.push("/")}>Spark it</NavLogo>
+
       {log ? (
         <BtnContainer>
           <MyPage onClick={() => router.push("./Mypage")}>마이페이지</MyPage>
@@ -153,6 +154,7 @@ const NavBar = (): ReactElement => {
           <SignPost onClick={() => router.push("./WritePost")}>글쓰기</SignPost>
         </BtnContainer>
       )}
+
     </NavContainer>
   );
 };
