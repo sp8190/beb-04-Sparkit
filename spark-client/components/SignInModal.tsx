@@ -1,7 +1,8 @@
 import React, { ReactElement, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
-
+import { useRouter } from "next/router";
+import { NextResponse, NextRequest } from "next/server";
 //모달창 열고 닫기 props
 interface props {
   open: boolean;
@@ -22,7 +23,7 @@ const OrderModal = (props: props): ReactElement => {
   const [login_id, setLogin_id] = useState("");
   const [login_pw, setLogin_pw] = useState("");
   const [login, { data, loading, error }] = useMutation(LOGIN);
-
+  const router = useRouter();
   const handleClick = () => {
     console.log("ID: ", login_id);
     console.log("PW: ", login_pw);
@@ -47,6 +48,7 @@ const OrderModal = (props: props): ReactElement => {
           "userInfo",
           JSON.stringify(appdata.data.login.access_token)
         );
+        location.reload();
       }
     });
   };

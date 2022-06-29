@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import axios from "axios";
-import { GraphQLID } from "graphql";
 
 const CREATE_POST = gql`
   mutation Mutation(
