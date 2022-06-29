@@ -1,25 +1,30 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import axios from "axios";
 
 const CREATE_POST = gql`
   mutation Mutation(
-    $title: String!
-    $post_content: String!
-    $user_id: Int
-    $hashtags: [String]
-    $images: [String]
+    $title: String!,
+    $post_content: String!,
+    $user_id: Int,
+    $hashtags: [String],
+    $images: [String],
+    $access_token: String
   ) {
     createPost(
-      title: $title
-      post_content: $post_content
-      user_id: $user_id
-      hashtags: $hashtags
-      images: $images
+      title: $title,
+      post_content: $post_content,
+      user_id: $user_id,
+      hashtags: $hashtags,
+      images: $images,
+      access_token: $access_token
     )
   }
 `;
+
+
 
 export default function WritePost() {
   const [isImageUpload, setImageUploaded] = useState(false);
@@ -27,7 +32,25 @@ export default function WritePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [hash, setHash] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [complete, setComplete] = useState(false);
   const [addNote, { loading, error }] = useMutation(CREATE_POST);
+  //완료시 알람과 함게 메인페이지로 이동
+  const router = useRouter();
+
+  useEffect(() => {
+    setAccessToken(window.sessionStorage.getItem("userInfo"))
+  }, []);
+
+  const onComplete = () => {
+    if (!complete) {
+      router.push("/");
+      alert("Post created!");
+    }
+    if (complete) {
+      console.error(error);
+    }
+  };
 
   const handleClick = () => {
     // 해시태그 #으로 구분
@@ -38,17 +61,26 @@ export default function WritePost() {
     console.log("컨텐츠: ", content);
     console.log("해시태그: ", hashtags);
     console.log("url들: ", isdataURL);
+    console.log("토큰: ",accessToken)
 
-    addNote({
-      variables: {
-        title: title,
-        post_content: content,
-        user_id: 1,
-        hashtags: hashtags,
-        images: isdataURL,
-      },
-    });
-    console.log("전송완료!");
+
+
+    if(title != undefined && content != undefined){
+      addNote({
+        variables: {
+          title: title,
+          post_content: content,
+          user_id: 1,
+          hashtags: hashtags,
+          images: isdataURL,
+          access_token: accessToken,
+        },
+      });
+      onComplete();
+    } else{
+      alert("제목과 컨텐츠는 필수 항목 입니다.")
+    }
+    
   };
 
   const sendFileToIPFS = async (f: any) => {

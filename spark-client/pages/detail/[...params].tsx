@@ -19,35 +19,31 @@ interface Props {
 }
 
 const GET_POST = gql`
-  query getPost($post_id: Int!) {
-    getPost(post_id: $post_id) {
-      id
-      title
-      post_content
+query getPost($post_id: Int!) {
+  getPost(post_id: $post_id) {
+    id
+    title
+    post_content
+    user_id
+    created_at
+    hashtags {
+      hashtag
+    }
+    comments {
+      post_id
       user_id
-      created_at
-      hashtags {
-        hashtag
-      }
-      comments {
-        post_id
-        user_id
-        comment
-      }
-      writer {
-        nickname
-      }
-      images {
-        image_path
-      }
-      likes {
-        id
-        post_id
-        user_id
-      }
+      comment
+    }
+    writer {
+      nickname
+    }
+    images {
+      image_path
     }
   }
+}
 `;
+
 
 const PostTitle = styled.h1`
   font-size: 36px;
@@ -70,6 +66,11 @@ const PostUserCreate = styled.div`
 const PostImage = styled.div`
   margin-left: 20px;
   margin-top: 30px;
+  .image{
+    margin-top: 10px;
+    width: 250px;
+    height: 250px;
+  }
 `;
 
 // post_content 사용자 작성 글
@@ -85,7 +86,9 @@ const PostBody = styled.div`
 
 // post_content 사용자 작성 글
 const PostHash = styled.div`
-  font-size: 10px;
+  display: flex;
+  color: rgb(255,255,255, 0.65);
+  font-size: 16px;
   margin-top: 30px;
   margin-left: 20px;
 `;
@@ -172,21 +175,20 @@ export default function Post({ params }: Props) {
       </DetailContainer>
     );
 
-  const { getPost } = data;
-  const { title } = getPost;
-  const { created_at } = getPost;
-  const { nickname } = getPost.writer;
-  const { post_content } = getPost;
-  const { hashtag } = getPost.hashtags;
-
-  //const { likes } = getPost;
-  const { images } = getPost;
-
-  console.log(images);
-  images.map((e: any) => {
-    console.log(e.image_path);
-  });
-
+    const { getPost } = data;
+    const { title } = getPost;
+    const { created_at } = getPost;
+    const { nickname } = getPost.writer;
+    const { post_content } = getPost;
+    const { hashtags } = getPost;
+    //const { likes } = getPost;
+    const { images } = getPost;
+  
+    console.log(getPost)
+    hashtags.map( (e: any) =>{
+      console.log(e.hashtag)
+    })
+  
   //console.log(getPost)
   return (
     <Layout>
@@ -207,7 +209,7 @@ export default function Post({ params }: Props) {
             {images.map((token: any) => {
               return (
                 <div key={token}>
-                  <img src={token.image_path} />
+                  <img className='image' src={token.image_path} />
                 </div>
               );
             })}
@@ -218,14 +220,15 @@ export default function Post({ params }: Props) {
           </PostBody>
 
           <PostHash>
-            {hashtag &&
-              hashtag.map((token: any) => {
-                return <div key={token}>{token}</div>;
-              })}
+          {hashtags.map((token: any) => {
+                return (
+                    <div key={token}>#{token.hashtag} </div>
+                );
+            })}
           </PostHash>
 
           <PostBottom>
-            <LikeAndComment postData={getPost} />
+            <LikeAndComment postData={data} />
           </PostBottom>
         </PostContent>
 
