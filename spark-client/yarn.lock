@@ -1090,7 +1090,6 @@
 "@next/swc-darwin-arm64@12.1.6":
   "integrity" "sha512-P0EXU12BMSdNj1F7vdkP/VrYDuCNwBExtRPDYawgSUakzi6qP0iKJpya2BuLvNzXx+XPU49GFuDC5X+SvY0mOw=="
   "resolved" "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-12.1.6.tgz"
-
   "version" "12.1.6"
 
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3":
