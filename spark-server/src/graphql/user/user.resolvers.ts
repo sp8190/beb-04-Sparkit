@@ -1,6 +1,6 @@
 import userModel from '../../models/user.model'
 import { status } from '../../constants/code'
-import walletapi from '../wallet/walletapi'
+import walletapi from '../../utils/walletapi'
 const aes256 = require('aes256')
 const Key = process.env.Key
 type user = {
