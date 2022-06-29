@@ -86,12 +86,12 @@ export default {
       return userInfo;
     },
     async likes(root: any) {
-      let like = await likeModel.findAll({
+      let likes = await likeModel.findAll({
         where: {
           post_id: root.id,
         },
       });
-      return like;
+      return likes;
     },
     async images(root: any) {
       let images = await imageModel.findAll({
@@ -101,13 +101,6 @@ export default {
       });
       return images;
     },
-     async likes(root:any) {
-      let likes = await likeModel.findAll({
-          where: {
-              post_id:root.id
-          }
-      });
-      return likes
   },
   Comment: {
     async writer(root: any) {
@@ -132,14 +125,6 @@ export default {
       });
       return postInfo;
     },
-    async getPostByUser(_: any, args: { user_id: number }) {
-      let postInfo = await postModel.findAll({
-        where: {
-          user_id: args.user_id,
-        },
-      });
-      return postInfo;
-    },
     async getPostsByHashtag(_: any, args: { hashtag_id: number }) {
       const getPostsByHashtagQuery = `select posts.* FROM posts, posts_hashtags where posts_hashtags.hashtag_id = :hashtag_id and posts.id = posts_hashtags.post_id`;
       const getPostsByHashtagValue = {
@@ -149,6 +134,14 @@ export default {
         replacements: getPostsByHashtagValue,
       });
       return posts[0];
+    },
+    async getPostByUser(_: any, args: { user_id: number }) {
+      let postInfo = await postModel.findAll({
+        where: {
+          user_id: args.user_id,
+        },
+      });
+      return postInfo;
     },
   },
   Mutation: {
