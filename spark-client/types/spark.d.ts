@@ -27,7 +27,13 @@ export interface GetPosts {
   hashtags: Hashtags[];
   comments: Comments[];
   writer: Writer;
-  likes: number;
+  likes: Likes[];
+}
+
+export interface Likes {
+  id: number;
+  user_id: number;
+  post_id: number;
 }
 
 export interface BackColor {
@@ -40,4 +46,13 @@ export interface Results {
 
 export interface ResultsHashTag {
   getPostsByHashtag: GetPosts[];
+}
+
+export interface UserInfo {
+  id: number;
+  nickname: string;
+  email: string;
+  account: number;
+  balance: number;
+  posts: GetPosts[];
 }

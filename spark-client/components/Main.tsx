@@ -18,7 +18,7 @@ const Main = (props: Props) => {
   const [title, setTitle] = useState("전체 태그");
   const endList = useRef<HTMLDivElement>(null);
 
-  const pathName = router.pathname;
+  const { pathname } = router;
   // const title = pathName === "/detail/[...params]" ? "detail" : "전체 태그";
   useEffect(() => {
     const targetIO = new IntersectionObserver((entries) => {
@@ -35,11 +35,13 @@ const Main = (props: Props) => {
   return (
     <MainMain>
       <MainDiv>
-        <Aside setTitle={setTitle} />
+        {pathname !== "/Mypage" && <Aside setTitle={setTitle} />}
         <Section>
-          <MainHeadDiv>
-            <h1>{title}</h1>
-          </MainHeadDiv>
+          {pathname !== "/Mypage" && (
+            <MainHeadDiv>
+              <h1>{title}</h1>
+            </MainHeadDiv>
+          )}
           {props.children}
         </Section>
       </MainDiv>

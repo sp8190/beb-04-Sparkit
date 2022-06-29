@@ -8,12 +8,13 @@ import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const pathName = router.pathname;
+  const { pathname } = router;
+  console.log(pathname);
   return (
     <RecoilRoot>
       <ApolloProvider client={client}>
         <GlobalStyle />
-        {pathName === "/SignUp" ? (
+        {pathname !== "/" && pathname !== "/Mypage" ? (
           <Component {...pageProps} />
         ) : (
           <Layout>

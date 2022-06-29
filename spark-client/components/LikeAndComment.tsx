@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { GrEdit } from "react-icons/gr";
 import { useState } from "react";
+import { GetPosts } from "../types/spark";
+import { gql, useMutation } from "@apollo/client";
+
 export const MainListContentP = styled.p`
   padding: 4px 0 8px;
   text-align: left;
@@ -50,11 +53,43 @@ const commentSvgStyle = {
   filter: "brightness(0) invert(1)",
 };
 
-const LikeAndComment = () => {
+interface Props {
+  postData: GetPosts;
+}
+
+const LIKEIT = gql`
+  mutation CreateLikes($post_id: Int, $user_id: Int, $access_token: String) {
+    createLikes(
+      post_id: $post_id
+      user_id: $user_id
+      access_token: $access_token
+    )
+  }
+`;
+
+const LikeAndComment = ({ postData }: Props) => {
+  console.log(postData.likes, "dsanlkdnsaldnklsan");
+  const { likes } = postData;
+  console.log(likes);
+  const accessToken = window.sessionStorage.getItem("userInfo");
+  const [createLikes, { data, loading, error }] = useMutation(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
-  const handleLikeButtonClick = () => {
-    setIsLikeClicked((prev) => !prev);
+  const [postLikes, setPostLikes] = useState(0);
+  const LikeVotting = () => {
+    setPostLikes((prev) => (prev += 1));
+    const args = {
+      post_id: postData.id,
+      user_id: postData.user_id,
+      access_token: accessToken,
+    };
+    createLikes({ variables: args });
   };
+  const handleLikeButtonClick = () => {
+    if (isLikeClicked) return;
+    setIsLikeClicked(true);
+    LikeVotting();
+  };
+
   return (
     <MainListContentP>
       <MainListLikeButton type="button" onClick={handleLikeButtonClick}>
@@ -64,7 +99,7 @@ const LikeAndComment = () => {
           ) : (
             <FaRegHeart style={heartSvgStyle} />
           )}
-          <ContentSpan>0</ContentSpan>
+          <ContentSpan>{postLikes}</ContentSpan>
         </ContentDiv>
       </MainListLikeButton>
       <MainListLikeButton>

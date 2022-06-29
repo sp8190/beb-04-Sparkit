@@ -48,7 +48,6 @@ export default gql`
   type Query {
     getPosts: [Post]
     getPost(post_id: Int): Post
-    getPostByUser(user_id: Int): [Post]
     getPostsByHashtag(hashtag_id: Int): [Post]
   }
 

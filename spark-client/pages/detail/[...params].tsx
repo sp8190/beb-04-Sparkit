@@ -27,7 +27,6 @@ const GET_POST = gql`
       user_id
       created_at
       hashtags {
-        id
         hashtag
       }
       comments {
@@ -35,57 +34,73 @@ const GET_POST = gql`
         user_id
         comment
       }
-      likes
       writer {
         nickname
+      }
+      images {
+        image_path
+      }
+      likes {
+        id
+        post_id
+        user_id
       }
     }
   }
 `;
 
-
-
-
-
-
 const PostTitle = styled.h1`
   font-size: 36px;
 `;
 
-
 const PostUserCreate = styled.div`
-  
   font-size: 20px;
   margin-top: 30px;
 
-  .user{
-    float:left;
+  .user {
+    float: left;
   }
-  .create{
+  .create {
     display: flex;
-    float:right;
+    float: right;
   }
-
 `;
 
+// 사용자 올린 그림
+const PostImage = styled.div`
+  margin-left: 20px;
+  margin-top: 30px;
+`;
+
+// post_content 사용자 작성 글
 const PostBody = styled.div`
   font-size: 20px;
   margin-top: 30px;
   margin-left: 20px;
-  border-top: 1px solid #797979;
 
-  .content{
+  .content {
     margin-top: 20px;
-
   }
 `;
 
-const Content = styled.textarea`
+// post_content 사용자 작성 글
+const PostHash = styled.div`
+  font-size: 10px;
+  margin-top: 30px;
   margin-left: 20px;
-  width: 90%;
-
 `;
-const LikeBtn = styled.button``;
+
+// 댓글 입력 칸
+const Content = styled.input`
+  margin-left: 10px;
+  width: 90%;
+  height: 50px;
+  border: 0;
+  outline: 0;
+`;
+const ContentBtn = styled.button`
+  margin-left: 5px;
+`;
 
 const DetailContainer = styled.div`
   padding: 20px;
@@ -98,10 +113,13 @@ const DetailContainer = styled.div`
 
 const PostContent = styled.div`
   width: 100%;
+  .inner_line {
+    border-top: 1px solid #797979;
+    margin-top: 30px;
+  }
 `;
 
 const PostHeader = styled.div`
-
   padding: 10px 20px;
   box-sizing: border-box;
   width: 100%;
@@ -122,16 +140,19 @@ export default function Post({ params }: Props) {
   //console.log(postTitle, postId, "dasdsa");
 
   const post_id = Number(postId);
-  const {data, loading, client: { cache },} = useQuery(GET_POST, {
+  const {
+    data,
+    loading,
+    client: { cache },
+  } = useQuery(GET_POST, {
     variables: {
       post_id,
     },
   });
 
-  
   const onClick = () => {
     cache.writeFragment({
-      id: `posts:${postId}`,
+      id: `posts:${post_id}`,
       fragment: gql`
         fragment postFragment on posts {
           like
@@ -151,21 +172,27 @@ export default function Post({ params }: Props) {
       </DetailContainer>
     );
 
-
   const { getPost } = data;
   const { title } = getPost;
   const { created_at } = getPost;
   const { nickname } = getPost.writer;
   const { post_content } = getPost;
-  const { likes } = getPost;
+  const { hashtag } = getPost.hashtags;
 
-  console.log(getPost)
+  //const { likes } = getPost;
+  const { images } = getPost;
+
+  console.log(images);
+  images.map((e: any) => {
+    console.log(e.image_path);
+  });
+
+  //console.log(getPost)
   return (
     <Layout>
       <DetailContainer>
         <SEO title={postTitle} />
         <PostContent>
-
           <PostHeader>
             <PostTitle>{title}</PostTitle>
             <PostUserCreate>
@@ -174,21 +201,36 @@ export default function Post({ params }: Props) {
             </PostUserCreate>
           </PostHeader>
 
+          <div className="inner_line"></div>
+
+          <PostImage>
+            {images.map((token: any) => {
+              return (
+                <div key={token}>
+                  <img src={token.image_path} />
+                </div>
+              );
+            })}
+          </PostImage>
+
           <PostBody>
             <p className="content">{post_content}</p>
           </PostBody>
 
-          
+          <PostHash>
+            {hashtag &&
+              hashtag.map((token: any) => {
+                return <div key={token}>{token}</div>;
+              })}
+          </PostHash>
 
           <PostBottom>
-            <LikeAndComment />
+            <LikeAndComment postData={getPost} />
           </PostBottom>
-
         </PostContent>
 
         <Content></Content>
-        <LikeBtn onClick={onClick}>{likes ? likes : 0}</LikeBtn>
-        
+        <ContentBtn onClick={onClick}>입력</ContentBtn>
       </DetailContainer>
     </Layout>
   );
