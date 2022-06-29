@@ -1,6 +1,12 @@
 import userModel from '../../models/user.model'
 import { status } from '../../constants/code'
 import {generateWallet} from '../../utils/wallet'
+import postModel from "../../models/post.model";
+import imageModel from "../../models/image.model"
+import { sequelize } from '../../models/index';
+import commentModel from "../../models/comment.model"
+import likeModel from "../../models/like.model";
+
 const aes256 = require('aes256')
 type user = {
   id: number
@@ -19,6 +25,58 @@ type token = {
 }
 
 export default {
+  User: {
+    async posts(root:any) {
+      let posts = await postModel.findAll({
+        where: {
+          user_id:root.id
+        }
+      })
+      return posts;
+    }
+  },
+  Post: {
+    async hashtags(root:any) {
+      const getHashtagsQuery = `SELECT hashtags.* FROM hashtags, posts_hashtags where hashtags.id = posts_hashtags.hashtag_id and posts_hashtags.post_id = :post_id`
+      const getHashtagsValue = {
+          post_id: root.id
+      }
+      const hashtags = await sequelize.query(getHashtagsQuery, {replacements: getHashtagsValue})
+      return hashtags[0]
+    },
+    async comments(root:any) {
+        let comments = await commentModel.findAll({
+            where: {
+                post_id:root.id
+            }
+        })
+        return comments
+    },
+    async writer(root:any) {
+        let userInfo = await userModel.findOne({
+            where: {
+                id: root.user_id
+            }
+        })
+        return userInfo
+    },
+    async likes(root:any) {
+        let likeCount = await likeModel.count({
+            where: {
+                post_id:root.id
+            }
+        })
+        return likeCount
+    },
+    async images(root:any) {
+        let images = await imageModel.findAll({
+            where: {
+                post_id:root.id
+            }
+        })
+        return images
+    } 
+  },
   Query: {
     async getUserInfo(_: any, args: { user_id: number }) {
       let userInfo = await userModel.findOne({
