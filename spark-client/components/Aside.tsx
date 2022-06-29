@@ -29,6 +29,11 @@ const ALL_POST = gql`
         id
         hashtag
       }
+      likes {
+        post_id
+        user_id
+        id
+      }
       comments {
         post_id
         user_id
@@ -85,6 +90,11 @@ const ALL_POST_BY_HASHTAG = gql`
       hashtags {
         id
         hashtag
+      }
+      likes {
+        id
+        user_id
+        post_id
       }
       comments {
         post_id

@@ -40,6 +40,11 @@ const GET_POST = gql`
       images {
         image_path
       }
+      likes {
+        id
+        post_id
+        user_id
+      }
     }
   }
 `;
@@ -220,7 +225,7 @@ export default function Post({ params }: Props) {
           </PostHash>
 
           <PostBottom>
-            <LikeAndComment postData={data} />
+            <LikeAndComment postData={getPost} />
           </PostBottom>
         </PostContent>
 
