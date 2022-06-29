@@ -2,6 +2,9 @@ import React, { ReactElement, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 
+import { useRecoilState } from "recoil";
+import { userIdState } from "../states/spark";
+
 //모달창 열고 닫기 props
 interface props {
   open: boolean;
@@ -21,6 +24,8 @@ const OrderModal = (props: props): ReactElement => {
   const { open, close } = props;
   const [login_id, setLogin_id] = useState("");
   const [login_pw, setLogin_pw] = useState("");
+  const [, setUserId] = useRecoilState(userIdState);
+
   const [login, { data, loading, error }] = useMutation(LOGIN);
 
   const handleClick = () => {
@@ -33,6 +38,13 @@ const OrderModal = (props: props): ReactElement => {
         password: login_pw,
       },
     });
+
+    const settingUserId = (accessToken: string) => {
+      const base64 = accessToken.split(".")[1];
+      const payload = Buffer.from(base64, "base64");
+      const result = JSON.parse(payload.toString());
+      setUserId(Number(result.id));
+    };
 
     //access_token의 유무로 로그인 조건문 작성
     cont.then((appdata) => {
@@ -47,6 +59,7 @@ const OrderModal = (props: props): ReactElement => {
           "userInfo",
           appdata.data.login.access_token
         );
+        settingUserId(appdata.data.login.access_token);
       }
     });
   };

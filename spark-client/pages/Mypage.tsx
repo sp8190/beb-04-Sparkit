@@ -1,7 +1,7 @@
 import MainList from "../components/MainList";
 
 import { gql, useQuery } from "@apollo/client";
-import { GetPosts, UserInfo } from "../types/spark";
+import { GetPostsByUserId } from "../types/spark";
 import styled from "styled-components";
 
 const USER_INFO = gql`
@@ -49,10 +49,6 @@ const USER_INFO = gql`
   }
 `;
 
-interface GetPostsByUserId {
-  getUserInfo: UserInfo;
-}
-
 export default function Mypage() {
   const { data } = useQuery<GetPostsByUserId>(USER_INFO, {
     variables: { userId: 36 },
@@ -78,7 +74,8 @@ export default function Mypage() {
           <h4>개인정보</h4>
         </UserTitleBox>
         <UserContentBox>
-          <UserListP>id: {`${data.getUserInfo.email}`}</UserListP>
+          <UserListP>id: {`${data.getUserInfo.id}`}</UserListP>
+          <UserListP>eamil id: {`${data.getUserInfo.email}`}</UserListP>
           <UserListP>nickname: {`${data.getUserInfo.nickname}`}</UserListP>
         </UserContentBox>
         <UserInfoAmendBox>

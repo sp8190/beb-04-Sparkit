@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import axios from "axios";
 import { GraphQLID } from "graphql";
+import NavBar from "../components/NavBar";
 
 const CREATE_POST = gql`
   mutation Mutation(
@@ -74,6 +75,7 @@ export default function WritePost() {
 
   return (
     <Container>
+      <NavBar />
       <FormWrap>
         <TitleBox>
           <label className="title">Posting to</label>
