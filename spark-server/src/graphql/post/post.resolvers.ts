@@ -135,14 +135,6 @@ export default {
       });
       return posts[0];
     },
-    async getPostByUser(_: any, args: { user_id: number }) {
-      let postInfo = await postModel.findAll({
-        where: {
-          user_id: args.user_id,
-        },
-      });
-      return postInfo;
-    },
   },
   Mutation: {
     async createPost(_: any, args: inputPost) {
