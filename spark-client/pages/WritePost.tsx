@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import axios from "axios";
 
+import { GraphQLID } from "graphql";
+import NavBar from "../components/NavBar";
+
 const CREATE_POST = gql`
   mutation Mutation(
     $title: String!,
@@ -105,6 +108,7 @@ export default function WritePost() {
 
   return (
     <Container>
+      <NavBar />
       <FormWrap>
         <TitleBox>
           <label className="title">Posting to</label>
