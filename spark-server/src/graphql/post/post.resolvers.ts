@@ -101,6 +101,13 @@ export default {
       });
       return images;
     },
+     async likes(root:any) {
+      let likes = await likeModel.findAll({
+          where: {
+              post_id:root.id
+          }
+      });
+      return likes
   },
   Comment: {
     async writer(root: any) {
