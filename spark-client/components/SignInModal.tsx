@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 import { useRouter } from "next/router";
-import { NextResponse, NextRequest } from "next/server";
 //모달창 열고 닫기 props
 interface props {
   open: boolean;
@@ -46,7 +45,7 @@ const OrderModal = (props: props): ReactElement => {
         close();
         window.sessionStorage.setItem(
           "userInfo",
-          JSON.stringify(appdata.data.login.access_token)
+          appdata.data.login.access_token
         );
         location.reload();
       }
