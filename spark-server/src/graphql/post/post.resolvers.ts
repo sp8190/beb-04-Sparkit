@@ -84,12 +84,12 @@ export default {
             return userInfo
         },
         async likes(root:any) {
-            let like = await likeModel.findAll({
+            let likes = await likeModel.findAll({
                 where: {
                     post_id:root.id
                 }
             })
-            return like
+            return likes
         },
         async images(root:any) {
             let images = await imageModel.findAll({
