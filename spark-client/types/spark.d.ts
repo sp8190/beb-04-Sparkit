@@ -41,3 +41,12 @@ export interface Results {
 export interface ResultsHashTag {
   getPostsByHashtag: GetPosts[];
 }
+
+export interface UserInfo {
+  id: number;
+  nickname: string;
+  email: string;
+  account: number;
+  balance: number;
+  posts: GetPosts[];
+}

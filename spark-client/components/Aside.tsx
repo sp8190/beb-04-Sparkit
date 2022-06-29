@@ -199,9 +199,7 @@ const Aside = ({ setTitle }: Props) => {
       <AsideContainer>
         <AsideDiv backgroundColor={`${darkTheme.contentColor}`}>
           <ul>
-            <AsideLi>
-              {pathname === "/MyPage" ? "userInfo" : "공지사항"}
-            </AsideLi>
+            <AsideLi>공지사항</AsideLi>
             <AsideLi>
               <p>hi</p>
             </AsideLi>
@@ -210,7 +208,7 @@ const Aside = ({ setTitle }: Props) => {
             </AsideLi>
           </ul>
         </AsideDiv>
-        {pathname !== "/Myage" && (
+        {
           <AsideDiv backgroundColor={`${darkTheme.contentColor}`}>
             <nav>
               <ul>
@@ -223,7 +221,7 @@ const Aside = ({ setTitle }: Props) => {
               </ul>
             </nav>
           </AsideDiv>
-        )}
+        }
       </AsideContainer>
     </AsideAside>
   );
