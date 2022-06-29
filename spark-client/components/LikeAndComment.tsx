@@ -58,22 +58,35 @@ interface Props {
 }
 
 const LIKEIT = gql`
-  mutation Mutation($postId: Int, $userId: Int) {
-    createLikes(post_id: $postId, user_id: $userId)
+  mutation CreateLikes($post_id: Int, $user_id: Int, $access_token: String) {
+    createLikes(
+      post_id: $post_id
+      user_id: $user_id
+      access_token: $access_token
+    )
   }
 `;
 
 const LikeAndComment = ({ postData }: Props) => {
+  console.log(postData.likes, "dsanlkdnsaldnklsan");
+  const { likes } = postData;
+  console.log(likes);
+  const accessToken = window.sessionStorage.getItem("userInfo");
   const [createLikes, { data, loading, error }] = useMutation(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
-  const [likes, setLikes] = useState(postData.likes);
+  const [postLikes, setPostLikes] = useState(0);
   const LikeVotting = () => {
-    setLikes((prev) => (prev += 1));
-    const args = { postId: postData.id, userId: postData.user_id };
+    setPostLikes((prev) => (prev += 1));
+    const args = {
+      post_id: postData.id,
+      user_id: postData.user_id,
+      access_token: accessToken,
+    };
     createLikes({ variables: args });
   };
   const handleLikeButtonClick = () => {
-    setIsLikeClicked((prev) => !prev);
+    if (isLikeClicked) return;
+    setIsLikeClicked(true);
     LikeVotting();
   };
 
@@ -86,7 +99,7 @@ const LikeAndComment = ({ postData }: Props) => {
           ) : (
             <FaRegHeart style={heartSvgStyle} />
           )}
-          <ContentSpan>{likes}</ContentSpan>
+          <ContentSpan>{postLikes}</ContentSpan>
         </ContentDiv>
       </MainListLikeButton>
       <MainListLikeButton>

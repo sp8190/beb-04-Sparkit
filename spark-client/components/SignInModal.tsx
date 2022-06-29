@@ -45,7 +45,7 @@ const OrderModal = (props: props): ReactElement => {
         close();
         window.sessionStorage.setItem(
           "userInfo",
-          JSON.stringify(appdata.data.login.access_token)
+          appdata.data.login.access_token
         );
       }
     });
