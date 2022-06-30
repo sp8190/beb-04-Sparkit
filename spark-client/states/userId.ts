@@ -1,7 +1,6 @@
 import { useRecoilState } from 'recoil'
 import { userIdState } from './spark'
-import { useLayoutEffect } from 'react'
-import dynamic from 'next/dynamic'
+
 //로그인시 받아온 accessToken 받아오기
 //받아온 accessToken userId로 변환
 //RecoilState에 userId넣기
