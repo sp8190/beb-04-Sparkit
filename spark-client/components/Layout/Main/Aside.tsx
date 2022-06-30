@@ -161,7 +161,6 @@ const Aside = ({ setTitle }: Props) => {
     });
     return newObj;
   };
-
   const tagsCountArr = (obj: TagsCount) => {
     const arr = [];
     for (let key in obj) {

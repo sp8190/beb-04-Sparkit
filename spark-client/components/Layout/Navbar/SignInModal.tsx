@@ -58,9 +58,14 @@ const OrderModal = (props: props): ReactElement => {
         close();
         window.sessionStorage.setItem(
           "userInfo",
-          JSON.stringify(appdata.data.login.access_token)
+          appdata.data.login.access_token
         );
+        window.sessionStorage.setItem("userId", appdata.data.id);
         settingUserId(appdata.data.login.access_token);
+<<<<<<< HEAD:spark-client/components/Layout/Navbar/SignInModal.tsx
+=======
+        location.reload();
+>>>>>>> 3bc120bfd03c89e377be10fc2279cec023ae88cc:spark-client/components/SignInModal.tsx
       }
     });
   };
@@ -84,6 +89,7 @@ const OrderModal = (props: props): ReactElement => {
                 <input
                   className="id_input"
                   type="text"
+                  placeholder="email"
                   onChange={({ target: { value } }) => setLogin_id(value)}
                   required
                 ></input>
@@ -94,6 +100,7 @@ const OrderModal = (props: props): ReactElement => {
                 <input
                   className="pw_input"
                   type="password"
+                  placeholder="password"
                   onChange={({ target: { value } }) => setLogin_pw(value)}
                   required
                 ></input>

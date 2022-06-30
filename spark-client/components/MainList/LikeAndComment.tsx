@@ -104,7 +104,7 @@ const LikeAndComment = ({ postData }: Props) => {
           ) : (
             <FaRegHeart style={heartSvgStyle} />
           )}
-          <ContentSpan>{postLikes}</ContentSpan>
+          {/* <ContentSpan>{postLikes}</ContentSpan> */}
         </ContentDiv>
       </MainListLikeButton>
       <MainListLikeButton>
