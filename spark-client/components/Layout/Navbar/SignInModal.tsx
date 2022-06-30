@@ -1,7 +1,8 @@
 import React, { ReactElement, useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 import { useRouter } from "next/router";
+import { LOGIN } from "../../../query/MutationQuery";
 
 import { useRecoilState } from "recoil";
 import { userIdState } from "../../../states/spark";
@@ -11,15 +12,6 @@ interface props {
   open: boolean;
   close: () => void;
 }
-
-//graphql 쿼리문
-const LOGIN = gql`
-  mutation Mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      access_token
-    }
-  }
-`;
 
 const OrderModal = (props: props): ReactElement => {
   const { open, close } = props;

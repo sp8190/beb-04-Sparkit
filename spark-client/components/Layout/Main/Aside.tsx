@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { postsState } from "../../../states/spark";
 import { gql, useQuery } from "@apollo/client";
 import { darkTheme } from "../../../styles/theme";
-import { useRouter } from "next/router";
+import { ALL_POST, ALL_POST_BY_HASHTAG } from "../../../query/GetQuery";
 import { ResultsHashTag, Results, BackColor, Tags } from "../../../types/spark";
 
 interface TagsCount {
@@ -17,104 +17,6 @@ interface Obj {
   count: number;
 }
 
-const ALL_POST = gql`
-  query GetPosts {
-    getPosts {
-      id
-      title
-      post_content
-      user_id
-      created_at
-      hashtags {
-        id
-        hashtag
-      }
-      likes {
-        id
-        post_id
-        user_id
-      }
-      comments {
-        post_id
-        user_id
-        id
-        comment
-        writer {
-          id
-          nickname
-          email
-          password
-          account
-          balance
-          private_key
-          created_at
-          updated_at
-          posts {
-            id
-            title
-            post_content
-            user_id
-            created_at
-            hashtags {
-              id
-              hashtag
-            }
-            writer {
-              nickname
-            }
-            likes {
-              post_id
-              user_id
-              id
-            }
-            images {
-              id
-              image_path
-              post_id
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const ALL_POST_BY_HASHTAG = gql`
-  query GetPostsByHashtag($hashtagId: Int) {
-    getPostsByHashtag(hashtag_id: $hashtagId) {
-      id
-      title
-      post_content
-      user_id
-      created_at
-      likes {
-        id
-        post_id
-        user_id
-      }
-      hashtags {
-        id
-        hashtag
-      }
-      comments {
-        post_id
-        user_id
-        comment
-        id
-        writer {
-          nickname
-          created_at
-          updated_at
-        }
-      }
-      images {
-        id
-        image_path
-        post_id
-      }
-    }
-  }
-`;
 
 interface Props {
   setTitle: Function;

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { darkTheme } from "../../styles/theme";
 
 import DetailPage from "../../components/Body/DetailPage";
+import { GET_POST } from "../../query/GetQuery";
 
 interface Params {
   params: { params: string[] };
@@ -14,36 +15,6 @@ interface Props {
   params: string[];
 }
 
-const GET_POST = gql`
-  query getPost($post_id: Int!) {
-    getPost(post_id: $post_id) {
-      id
-      title
-      post_content
-      user_id
-      created_at
-      likes {
-        id
-        post_id
-        user_id
-      }
-      hashtags {
-        hashtag
-      }
-      comments {
-        post_id
-        user_id
-        comment
-      }
-      writer {
-        nickname
-      }
-      images {
-        image_path
-      }
-    }
-  }
-`;
 
 const DetailContainer = styled.div`
   padding: 20px;
