@@ -67,7 +67,6 @@ const LIKEIT = gql`
   }
 `;
 const LikeAndComment = ({ postData }: Props) => {
-  console.log(postData);
   const { likes } = postData;
 
   const accessToken = window.sessionStorage.getItem("userInfo");

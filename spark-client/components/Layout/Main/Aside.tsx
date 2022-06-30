@@ -205,7 +205,7 @@ const Aside = ({ setTitle }: Props) => {
   }, [tags]);
 
   const tagList = useMemo(() => {
-    return obj.slice(0, 7).map((item, index) => {
+    return obj.slice(0, 6).map((item, index) => {
       return (
         <AsideLi key={item.name + index}>
           <AsideLiButton
