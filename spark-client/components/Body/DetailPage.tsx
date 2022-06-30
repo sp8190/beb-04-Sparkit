@@ -1,17 +1,11 @@
-import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { useState } from "react";
 
 import SEO from "../../components/SEO";
-
 import LikeAndComment from "../../components/MainList/LikeAndComment";
-
 import { darkTheme } from "../../styles/theme";
-
 import Layout from "../../components/Layout";
-
 import { GetPosts } from "../../types/spark";
-import Image from "next/image";
 
 interface Data {
   getPost: GetPosts;

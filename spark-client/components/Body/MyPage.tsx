@@ -1,6 +1,5 @@
 import MainList from "../../components/MainList";
 
-import { gql, useQuery } from "@apollo/client";
 import { GetPostsByUserId } from "../../types/spark";
 import styled from "styled-components";
 

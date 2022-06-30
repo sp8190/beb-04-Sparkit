@@ -8,25 +8,7 @@ import { useRouter } from "next/router";
 import GetUserId from "../states/userId";
 import { useRecoilState } from "recoil";
 import { userIdState } from "../states/spark";
-const CREATE_POST = gql`
-  mutation CreatePost(
-    $title: String!
-    $post_content: String!
-    $user_id: Int
-    $hashtags: [String]
-    $images: [String]
-    $access_token: String
-  ) {
-    createPost(
-      title: $title
-      post_content: $post_content
-      user_id: $user_id
-      hashtags: $hashtags
-      images: $images
-      access_token: $access_token
-    )
-  }
-`;
+import { CREATE_POST } from "../query/MutationQuery";
 
 export default function WritePost() {
   const [isImageUpload, setImageUploaded] = useState(false);
