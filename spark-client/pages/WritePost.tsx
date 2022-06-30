@@ -53,14 +53,12 @@ export default function WritePost() {
       console.error(error);
     }
   };
-  let accessTokenRE = accessToken.substring(1);
-  accessTokenRE = accessTokenRE.slice(0, -1);
   const handleClick = () => {
     // 해시태그 #으로 구분
     let hashtags = hash.split("#");
     hashtags = hashtags.filter((element, i) => element != "");
     console.log(userId);
-    console.log("토큰", accessTokenRE);
+    console.log("토큰", accessToken);
     console.log("제목: ", title);
     console.log("컨텐츠: ", content);
     console.log("해시태그: ", hashtags);
@@ -73,7 +71,7 @@ export default function WritePost() {
           user_id: userId,
           hashtags: hashtags,
           images: isdataURL,
-          access_token: accessTokenRE,
+          access_token: accessToken,
         },
       });
       onComplete();
