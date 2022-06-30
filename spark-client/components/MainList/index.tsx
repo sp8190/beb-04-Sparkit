@@ -8,7 +8,7 @@ import sparkLogo from "../../assets/sparkLogo.png";
 import LikeAndComment, {
   MainListLikeButton,
   MainListContentP,
-} from "../../components/LikeAndComment";
+} from "./LikeAndComment";
 
 import { darkTheme } from "../../styles/theme";
 

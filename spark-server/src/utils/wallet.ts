@@ -10,9 +10,9 @@ export type Wallet = {
 export async function generateWallet(reqPassword: string): Promise<Wallet> {
   const seed = Seed.new({ passphrase: reqPassword })
 
-  const mnemonic = seed.mnemonic.toString()
-  const privateKey = '0x' + seed.privatekey.toString('hex')
-  const publicKey = web3.eth.accounts.privateKeyToAccount(privateKey).address
+  const mnemonic = seed.mnemonic.toString() //mnemonic 문자열생성
+  const privateKey = '0x' + seed.privatekey.toString('hex') //private key 생성하는부분
+  const publicKey = web3.eth.accounts.privateKeyToAccount(privateKey).address // 지갑address생성
 
   return {
     privateKey,

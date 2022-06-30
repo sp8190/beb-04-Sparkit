@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { GrEdit } from "react-icons/gr";
 import { useLayoutEffect, useState } from "react";
-import { GetPosts } from "../types/spark";
+import { GetPosts } from "../../types/spark";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { GetPostsByUserId } from "../types/spark";
+import { GetPostsByUserId } from "../../types/spark";
 
 import { useRecoilState } from "recoil";
-import { userIdState } from "../states/spark";
+import { userIdState } from "../../states/spark";
 
 export const MainListContentP = styled.p`
   padding: 4px 0 8px;
@@ -62,45 +62,33 @@ interface Props {
 }
 
 const LIKEIT = gql`
-  mutation CreateLikes($post_id: Int, $user_id: Int, $access_token: String) {
-    createLikes(
-      post_id: $post_id
-      user_id: $user_id
-      access_token: $access_token
-    )
+  mutation CreateLikes($postId: Int, $userId: Int, $accessToken: String) {
+    createLikes(post_id: $postId, user_id: $userId, access_token: $accessToken)
   }
 `;
-
-const USER_INFO = gql`
-  query GetUserInfo($userId: Int, $accessToken: String) {
-    getUserInfo(user_id: $userId, access_token: $accessToken) {
-      id
-    }
-  }
-`;
-
 const LikeAndComment = ({ postData }: Props) => {
   const { likes } = postData;
-  const accessToken = window.sessionStorage.getItem("userInfo");
 
-  const [createLikes] = useMutation<GetPostsByUserId>(LIKEIT);
+  const accessToken = window.sessionStorage.getItem("userInfo");
+  const [createLikes] = useMutation(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
-  // const [postLikes, setPostLikes] = useState(likes.length);
+  const [postLikes, setPostLikes] = useState(likes?.length);
   const [userId] = useRecoilState(userIdState);
 
-  // useLayoutEffect(() => {
-  //   const likesUserIds = likes.map((item) => item.user_id);
-  //   setIsLikeClicked(likesUserIds.includes(userId));
-  // }, []);
+  useLayoutEffect(() => {
+    if (!likes) return;
+    const likesUserIds = likes.map((item) => item.user_id);
+    setIsLikeClicked(likesUserIds.includes(userId));
+  }, []);
 
   const LikeVotting = () => {
-    // setPostLikes((prev) => (prev += 1));
-    // const args = {
-    //   post_id: postData.id,
-    //   user_id: userId,
-    //   access_token: accessToken,
-    // };
-    // createLikes({ variables: args });
+    setPostLikes((prev) => (prev += 1));
+    const args = {
+      postId: postData.id,
+      userId: userId,
+      accessToken: accessToken,
+    };
+    createLikes({ variables: args });
   };
   const handleLikeButtonClick = () => {
     if (isLikeClicked) return;

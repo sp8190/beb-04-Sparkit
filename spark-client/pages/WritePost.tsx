@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import axios from "axios";
-import NavBar from "./../components/NavBar";
+import NavBar from "../components/Layout/Navbar";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import GetUserId from "../states/userId";

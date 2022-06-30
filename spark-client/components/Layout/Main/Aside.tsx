@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { useState, useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
-import { postsState } from "../states/spark";
+import { postsState } from "../../../states/spark";
 import { gql, useQuery } from "@apollo/client";
-import { darkTheme } from "../styles/theme";
+import { darkTheme } from "../../../styles/theme";
 import { useRouter } from "next/router";
-import { ResultsHashTag, Results, BackColor, Tags } from "../types/spark";
+import { ResultsHashTag, Results, BackColor, Tags } from "../../../types/spark";
 
 interface TagsCount {
   [name: string]: { id: number; count: number };
@@ -30,9 +30,9 @@ const ALL_POST = gql`
         hashtag
       }
       likes {
+        id
         post_id
         user_id
-        id
       }
       comments {
         post_id
@@ -87,14 +87,14 @@ const ALL_POST_BY_HASHTAG = gql`
       post_content
       user_id
       created_at
+      likes {
+        id
+        post_id
+        user_id
+      }
       hashtags {
         id
         hashtag
-      }
-      likes {
-        id
-        user_id
-        post_id
       }
       comments {
         post_id
@@ -124,6 +124,7 @@ const Aside = ({ setTitle }: Props) => {
   const [, setPostData] = useRecoilState(postsState);
   const [tags, setTags] = useState<Tags[]>([]);
   const [obj, setObj] = useState<Obj[]>([]);
+
   const [tagId, setTagId] = useState(0);
   const { data, refetch } = useQuery<Results>(ALL_POST);
   const { data: data2, refetch: refetch2 } = useQuery<ResultsHashTag>(
@@ -169,6 +170,9 @@ const Aside = ({ setTitle }: Props) => {
   };
 
   const handleTagClick = (item: number, name: string) => {
+    if (!data2) return;
+    console.log(data2);
+    setPostData(data2.getPostsByHashtag);
     setTitle(name);
     setTagId(item);
   };
@@ -189,7 +193,6 @@ const Aside = ({ setTitle }: Props) => {
 
     setTags(tags);
     setPostData(data.getPosts);
-    console.log(data);
   }, [data]);
 
   useEffect(() => {
@@ -201,7 +204,7 @@ const Aside = ({ setTitle }: Props) => {
   }, [tags]);
 
   const tagList = useMemo(() => {
-    return obj.slice(0, 7).map((item, index) => {
+    return obj.slice(0, 6).map((item, index) => {
       return (
         <AsideLi key={item.name + index}>
           <AsideLiButton
