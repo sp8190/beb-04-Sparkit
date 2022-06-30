@@ -5,6 +5,9 @@ import axios from "axios";
 import NavBar from "./../components/NavBar";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import GetUserId from "../states/userId";
+import { useRecoilState } from "recoil";
+import { userIdState } from "../states/spark";
 const CREATE_POST = gql`
   mutation CreatePost(
     $title: String!
@@ -38,6 +41,11 @@ export default function WritePost() {
   useEffect(() => {
     setAccessToken(window.sessionStorage.getItem("userInfo"));
   }, []);
+  GetUserId();
+  const [userId] = useRecoilState(userIdState);
+  console.log(userId);
+  let accessTokenRE = accessToken.substring(1);
+  accessTokenRE = accessTokenRE.slice(0, -1);
   const handleClick = () => {
     // 해시태그 #으로 구분
     let hashtags = hash.split("#");
@@ -47,15 +55,15 @@ export default function WritePost() {
     console.log("컨텐츠: ", content);
     console.log("해시태그: ", hashtags);
     console.log("url들: ", isdataURL);
-    console.log("토큰", accessToken);
+    console.log("토큰", accessTokenRE);
     addNote({
       variables: {
         title: title,
         post_content: content,
-        user_id: 1,
+        user_id: userId,
         hashtags: hashtags,
         images: isdataURL,
-        access_token: accessToken,
+        access_token: accessTokenRE,
       },
     });
     console.log("전송완료!");

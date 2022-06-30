@@ -4,7 +4,7 @@ import { GetPostsByUserId } from "../types/spark";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { userIdState } from "../states/spark";
-
+import GetUserId from "../states/userId";
 const USER_INFO = gql`
   query GetUserInfo($userId: Int, $accessToken: String) {
     getUserInfo(user_id: $userId, access_token: $accessToken) {
@@ -51,16 +51,18 @@ const USER_INFO = gql`
 `;
 
 export default function Mypage() {
-  const [userId, setUserId] = useRecoilState(userIdState);
+  // const [userId, setUserId] = useRecoilState(userIdState);
 
-  const settingUserId = (accessToken: string) => {
-    const base64 = accessToken.split(".")[1];
-    const payload = Buffer.from(base64, "base64");
-    const result = JSON.parse(payload.toString());
-    setUserId(Number(result.id));
-  };
-  const accessToken = window.sessionStorage.getItem("userInfo");
-  settingUserId(accessToken);
+  // const settingUserId = (accessToken: string) => {
+  //   const base64 = accessToken.split(".")[1];
+  //   const payload = Buffer.from(base64, "base64");
+  //   const result = JSON.parse(payload.toString());
+  //   setUserId(Number(result.id));
+  // };
+  // const accessToken = window.sessionStorage.getItem("userInfo");
+  // settingUserId(accessToken);
+  GetUserId();
+  const [userId] = useRecoilState(userIdState);
   const { data } = useQuery<GetPostsByUserId>(USER_INFO, {
     variables: { userId: userId },
   });
@@ -68,7 +70,6 @@ export default function Mypage() {
     console.log("hi");
   };
   console.log(data);
-  console.log(accessToken);
   if (!data) return <>loading</>;
   return (
     <>
