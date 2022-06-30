@@ -14,8 +14,20 @@ type inputLike = {
 export default {
   Mutation: {
     async createLikes(_: any, args: inputLike) {
+
       if (!verifyAccessToken(args.access_token)) {
         return status.TOKEN_EXPIRED;
+      }
+
+      let savedLike = await likeModel.findOne({
+        where: {
+          post_id: args.post_id,
+          user_id: args.user_id
+        }
+      })
+
+      if(savedLike) {
+        return status.ALREADY_EXISTS_DATA
       }
 
       let like = await likeModel.create({
