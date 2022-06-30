@@ -11,6 +11,7 @@ import { darkTheme } from "../../styles/theme";
 import Layout from "../../components/Layout";
 
 import { GetPosts } from "../../types/spark";
+import Image from "next/image";
 
 interface Data {
   getPost: GetPosts;
@@ -29,7 +30,7 @@ const DetailPage = ({ params, data, onClick }: Props) => {
   const { nickname } = getPost.writer;
   const { post_content } = getPost;
   const { hashtags } = getPost;
-  //const { likes } = getPost;
+  const { likes } = getPost;
   const { images } = getPost;
   const [postTitle, postId] = params || [];
 

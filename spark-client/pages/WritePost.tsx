@@ -11,19 +11,19 @@ import { userIdState } from "../states/spark";
 const CREATE_POST = gql`
   mutation CreatePost(
     $title: String!
-    $postContent: String!
-    $userId: Int
+    $post_content: String!
+    $user_id: Int
     $hashtags: [String]
     $images: [String]
-    $accessToken: String
+    $access_token: String
   ) {
     createPost(
       title: $title
-      post_content: $postContent
-      user_id: $userId
+      post_content: $post_content
+      user_id: $user_id
       hashtags: $hashtags
       images: $images
-      access_token: $accessToken
+      access_token: $access_token
     )
   }
 `;
@@ -36,6 +36,7 @@ export default function WritePost() {
   const [hash, setHash] = useState("");
   const [addNote, { loading, error }] = useMutation(CREATE_POST);
   const [accessToken, setAccessToken] = useState("");
+  const [complete, setComplete] = useState(false);
   const router = useRouter();
   router;
   useEffect(() => {
@@ -43,30 +44,40 @@ export default function WritePost() {
   }, []);
   GetUserId();
   const [userId] = useRecoilState(userIdState);
-  console.log(userId);
-  let accessTokenRE = accessToken.substring(1);
-  accessTokenRE = accessTokenRE.slice(0, -1);
+  const onComplete = () => {
+    if (!complete) {
+      router.push("/");
+      alert("Post created!");
+    }
+    if (complete) {
+      console.error(error);
+    }
+  };
   const handleClick = () => {
     // 해시태그 #으로 구분
     let hashtags = hash.split("#");
     hashtags = hashtags.filter((element, i) => element != "");
-
+    console.log(userId);
+    console.log("토큰", accessToken);
     console.log("제목: ", title);
     console.log("컨텐츠: ", content);
     console.log("해시태그: ", hashtags);
     console.log("url들: ", isdataURL);
-    console.log("토큰", accessTokenRE);
-    addNote({
-      variables: {
-        title: title,
-        post_content: content,
-        user_id: userId,
-        hashtags: hashtags,
-        images: isdataURL,
-        access_token: accessTokenRE,
-      },
-    });
-    console.log("전송완료!");
+    if (title != undefined && content != undefined) {
+      addNote({
+        variables: {
+          title: title,
+          post_content: content,
+          user_id: userId,
+          hashtags: hashtags,
+          images: isdataURL,
+          access_token: accessToken,
+        },
+      });
+      onComplete();
+    } else {
+      alert("제목과 컨텐츠는 필수 항목 입니다.");
+    }
   };
 
   const sendFileToIPFS = async (f: any) => {

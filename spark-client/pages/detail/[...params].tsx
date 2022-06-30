@@ -82,7 +82,7 @@ export default function Post({ params }: Props) {
         }
       `,
       data: {
-        // like: setIsLiked(isLiked + 1),
+        like: setIsLiked(isLiked + 1),
       },
     });
   };
