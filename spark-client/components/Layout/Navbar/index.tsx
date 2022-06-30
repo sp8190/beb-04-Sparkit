@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import styled from "styled-components";
-import SignUp from "./../pages/SignUp";
+import SignUp from "../../../pages/SignUp";
 interface Props {
   position: string;
 }

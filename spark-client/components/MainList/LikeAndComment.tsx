@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { GrEdit } from "react-icons/gr";
 import { useLayoutEffect, useState } from "react";
-import { GetPosts } from "../types/spark";
+import { GetPosts } from "../../types/spark";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { GetPostsByUserId } from "../types/spark";
+import { GetPostsByUserId } from "../../types/spark";
 
 import { useRecoilState } from "recoil";
-import { userIdState } from "../states/spark";
+import { userIdState } from "../../states/spark";
 
 export const MainListContentP = styled.p`
   padding: 4px 0 8px;
@@ -67,18 +67,19 @@ const LIKEIT = gql`
   }
 `;
 const LikeAndComment = ({ postData }: Props) => {
+  console.log(postData);
   const { likes } = postData;
-  const accessToken = window.sessionStorage.getItem("userInfo");
 
-  const [createLikes] = useMutation<GetPostsByUserId>(LIKEIT);
+  const accessToken = window.sessionStorage.getItem("userInfo");
+  const [createLikes] = useMutation(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
-  const [postLikes, setPostLikes] = useState(likes.length);
+  const [postLikes, setPostLikes] = useState(likes?.length);
   const [userId] = useRecoilState(userIdState);
 
   useLayoutEffect(() => {
+    if (!likes) return;
     const likesUserIds = likes.map((item) => item.user_id);
     setIsLikeClicked(likesUserIds.includes(userId));
-    console.log(userId);
   }, []);
 
   const LikeVotting = () => {

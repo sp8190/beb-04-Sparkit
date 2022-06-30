@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 
 import { useRecoilState } from "recoil";
-import { userIdState } from "../states/spark";
+import { userIdState } from "../../../states/spark";
 
 //모달창 열고 닫기 props
 interface props {

@@ -5,7 +5,7 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import axios from "axios";
 
 import { GraphQLID } from "graphql";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/Layout/Navbar";
 
 const CREATE_POST = gql`
   mutation Mutation(
