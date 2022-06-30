@@ -6,6 +6,7 @@ import { userIdState } from './spark'
 //RecoilState에 userId넣기
 const GetUserId = () => {
   const [userId, setUserId] = useRecoilState(userIdState)
+  if (typeof window !== 'undefined'){
   const accessToken = window.sessionStorage.getItem('userInfo')
   if (!accessToken) return
   const settingUserId = (accessToken: string) => {
@@ -15,6 +16,7 @@ const GetUserId = () => {
     setUserId(Number(result.id))
   }
   settingUserId(accessToken)
+}
 }
 
 export default GetUserId
