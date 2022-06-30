@@ -53,6 +53,7 @@ export default function WritePost() {
       console.error(error);
     }
   };
+
   const handleClick = () => {
     // 해시태그 #으로 구분
     let hashtags = hash.split("#");
