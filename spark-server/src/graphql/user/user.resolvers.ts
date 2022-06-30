@@ -96,11 +96,13 @@ export default {
       giveNewUserEther(publicKey)
       //인코딩
       const encryptedPrivateKey = aes256.encrypt(process.env.PRIVATE_KEY_SECRET, privateKey)
+      const crypto = require('crypto');
+      const encryptedPassword = crypto.createHmac('sha256', process.env.PASSWORD_SECRET).update(password).digest('hex');
 
       //유저가 회원가입하게 되면 aes256암호화를 통해 암호화됌
       let user = await userModel.create({
         email: email,
-        password: password,
+        password: encryptedPassword,
         nickname: nickname,
         account: publicKey,
         private_key: encryptedPrivateKey
@@ -114,10 +116,13 @@ export default {
     },
     //로그인시
     async login(_: any, args: user) {
+      const crypto = require('crypto');
+      const encryptedPassword = crypto.createHmac('sha256', process.env.PASSWORD_SECRET).update(args.password).digest('hex');
+
       let user = await userModel.findOne({
         where: {
           email: args.email,
-          password: args.password,
+          password: encryptedPassword,
         },
       })
       if (!user) {
