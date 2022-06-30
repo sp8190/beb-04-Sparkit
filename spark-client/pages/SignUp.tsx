@@ -189,6 +189,7 @@ const SignUp: React.FC = () => {
             setEmail(e.target.value);
           }}
         />
+        <span>{errors.email && "이메일 형식이 맞지 않습니다."}</span>
         <FormLabel>Password</FormLabel>
         <FormInput
           {...register("password", {
@@ -203,6 +204,7 @@ const SignUp: React.FC = () => {
             setPassword(e.target.value);
           }}
         />
+        <span>{errors.password && "비밀번호 형식이 맞지 않습니다."}</span>
         {/* <FormLabel>Password_confirm</FormLabel>
         <FormInput
           {...register("password_confirm", {

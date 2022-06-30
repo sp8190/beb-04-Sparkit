@@ -85,22 +85,22 @@ const LikeAndComment = ({ postData }: Props) => {
 
   const [createLikes] = useMutation<GetPostsByUserId>(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
-  const [postLikes, setPostLikes] = useState(likes.length);
+  // const [postLikes, setPostLikes] = useState(likes.length);
   const [userId] = useRecoilState(userIdState);
 
-  useLayoutEffect(() => {
-    const likesUserIds = likes.map((item) => item.user_id);
-    setIsLikeClicked(likesUserIds.includes(userId));
-  }, []);
+  // useLayoutEffect(() => {
+  //   const likesUserIds = likes.map((item) => item.user_id);
+  //   setIsLikeClicked(likesUserIds.includes(userId));
+  // }, []);
 
   const LikeVotting = () => {
-    setPostLikes((prev) => (prev += 1));
-    const args = {
-      post_id: postData.id,
-      user_id: userId,
-      access_token: accessToken,
-    };
-    createLikes({ variables: args });
+    // setPostLikes((prev) => (prev += 1));
+    // const args = {
+    //   post_id: postData.id,
+    //   user_id: userId,
+    //   access_token: accessToken,
+    // };
+    // createLikes({ variables: args });
   };
   const handleLikeButtonClick = () => {
     if (isLikeClicked) return;
@@ -116,7 +116,7 @@ const LikeAndComment = ({ postData }: Props) => {
           ) : (
             <FaRegHeart style={heartSvgStyle} />
           )}
-          <ContentSpan>{postLikes}</ContentSpan>
+          {/* <ContentSpan>{postLikes}</ContentSpan> */}
         </ContentDiv>
       </MainListLikeButton>
       <MainListLikeButton>

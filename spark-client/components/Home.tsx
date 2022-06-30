@@ -12,7 +12,7 @@ const Home = (props: Props) => {
   return (
     <Main>
       <MainDiv>
-        <Aside />
+        <Aside setTitle={undefined} />
         <Section>{props.children}</Section>
       </MainDiv>
     </Main>

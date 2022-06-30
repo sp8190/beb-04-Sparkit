@@ -142,8 +142,8 @@ const NavBar = (): ReactElement => {
 
       {log ? (
         <BtnContainer>
-          <MyPage onClick={() => router.push("./Mypage")}>마이페이지</MyPage>
-          <SignPost onClick={() => router.push("./WritePost")}>글쓰기</SignPost>
+          <MyPage onClick={() => router.push("/Mypage")}>마이페이지</MyPage>
+          <SignPost onClick={() => router.push("/WritePost")}>글쓰기</SignPost>
           <Logout onClick={logout}>로그아웃</Logout>
         </BtnContainer>
       ) : (

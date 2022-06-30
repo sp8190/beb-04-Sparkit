@@ -154,13 +154,12 @@ const Aside = ({ setTitle }: Props) => {
     arr.forEach((item) => {
       for (let i = 0; i < item.tags.length; i++) {
         const tag = item.tags[i].hashtag;
-        if (newObj[tag]) newObj.tag.count += 1;
+        if (newObj[tag]) newObj[tag].count += 1;
         else newObj[tag] = { count: 1, id: item.tags[i].id };
       }
     });
     return newObj;
   };
-
   const tagsCountArr = (obj: TagsCount) => {
     const arr = [];
     for (let key in obj) {

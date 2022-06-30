@@ -50,12 +50,6 @@ const USER_INFO = gql`
   }
 `;
 
-const GET_USER = gql`
-  query {
-    user @client
-  }
-`;
-
 export default function Mypage() {
   const [userId, setUserId] = useRecoilState(userIdState);
 
@@ -74,6 +68,7 @@ export default function Mypage() {
     console.log("hi");
   };
   console.log(data);
+  console.log(accessToken);
   if (!data) return <>loading</>;
   return (
     <>
