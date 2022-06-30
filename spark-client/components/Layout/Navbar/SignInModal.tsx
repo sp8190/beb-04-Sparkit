@@ -62,10 +62,7 @@ const OrderModal = (props: props): ReactElement => {
         );
         window.sessionStorage.setItem("userId", appdata.data.id);
         settingUserId(appdata.data.login.access_token);
-<<<<<<< HEAD:spark-client/components/Layout/Navbar/SignInModal.tsx
-=======
         location.reload();
->>>>>>> 3bc120bfd03c89e377be10fc2279cec023ae88cc:spark-client/components/SignInModal.tsx
       }
     });
   };
