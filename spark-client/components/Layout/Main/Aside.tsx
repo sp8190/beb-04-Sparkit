@@ -45,7 +45,6 @@ const Aside = ({ setTitle }: Props) => {
   );
 
   useEffect(() => {
-    console.log(tagId);
     refetch2();
   }, [tagId]);
 
@@ -81,7 +80,7 @@ const Aside = ({ setTitle }: Props) => {
 
   const handleTagClick = (item: number, name: string) => {
     if (!data2) return;
-    console.log(data2);
+
     setPostData(data2.getPostsByHashtag);
     setTitle(name);
     setTagId(item);
@@ -133,12 +132,9 @@ const Aside = ({ setTitle }: Props) => {
       <AsideContainer>
         <AsideDiv backgroundColor={`${darkTheme.contentColor}`}>
           <ul>
-            <AsideLi>공지사항</AsideLi>
+            <AsideLi>⭐공지사항⭐</AsideLi>
             <AsideLi>
-              <p>hi</p>
-            </AsideLi>
-            <AsideLi>
-              <p>hi2</p>
+              <h1>댓글 작성 및 NFT 구매 기능은 차후 지원 예정입니다.</h1>
             </AsideLi>
           </ul>
         </AsideDiv>

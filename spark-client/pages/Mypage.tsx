@@ -67,8 +67,6 @@ export default function Mypage() {
   const { data } = useQuery<GetPostsByUserId>(USER_INFO, {
     variables: { userId: userId },
   });
-  console.log(data, "pagedata");
-  console.log(userId, "pagedata");
 
   if (!data) return <>loading</>;
   return (
