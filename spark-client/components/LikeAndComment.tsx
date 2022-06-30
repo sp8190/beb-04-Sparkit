@@ -62,23 +62,10 @@ interface Props {
 }
 
 const LIKEIT = gql`
-  mutation CreateLikes($post_id: Int, $user_id: Int, $access_token: String) {
-    createLikes(
-      post_id: $post_id
-      user_id: $user_id
-      access_token: $access_token
-    )
+  mutation CreateLikes($postId: Int, $userId: Int, $accessToken: String) {
+    createLikes(post_id: $postId, user_id: $userId, access_token: $accessToken)
   }
 `;
-
-const USER_INFO = gql`
-  query GetUserInfo($userId: Int, $accessToken: String) {
-    getUserInfo(user_id: $userId, access_token: $accessToken) {
-      id
-    }
-  }
-`;
-
 const LikeAndComment = ({ postData }: Props) => {
   const { likes } = postData;
   const accessToken = window.sessionStorage.getItem("userInfo");
@@ -91,14 +78,15 @@ const LikeAndComment = ({ postData }: Props) => {
   useLayoutEffect(() => {
     const likesUserIds = likes.map((item) => item.user_id);
     setIsLikeClicked(likesUserIds.includes(userId));
+    console.log(userId);
   }, []);
 
   const LikeVotting = () => {
     setPostLikes((prev) => (prev += 1));
     const args = {
-      post_id: postData.id,
-      user_id: userId,
-      access_token: accessToken,
+      postId: postData.id,
+      userId: userId,
+      accessToken: accessToken,
     };
     createLikes({ variables: args });
   };

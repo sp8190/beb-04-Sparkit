@@ -4,7 +4,6 @@ import { useRecoilState } from "recoil";
 import { postsState } from "../states/spark";
 import { gql, useQuery } from "@apollo/client";
 import { darkTheme } from "../styles/theme";
-import { useRouter } from "next/router";
 import { ResultsHashTag, Results, BackColor, Tags } from "../types/spark";
 
 interface TagsCount {
@@ -134,7 +133,6 @@ const Aside = ({ setTitle }: Props) => {
   );
 
   useEffect(() => {
-    console.log(tagId);
     refetch2();
   }, [tagId]);
 
@@ -154,7 +152,7 @@ const Aside = ({ setTitle }: Props) => {
     arr.forEach((item) => {
       for (let i = 0; i < item.tags.length; i++) {
         const tag = item.tags[i].hashtag;
-        if (newObj[tag]) newObj.tag.count += 1;
+        if (newObj[tag]) newObj[tag].count += 1;
         else newObj[tag] = { count: 1, id: item.tags[i].id };
       }
     });

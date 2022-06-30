@@ -61,8 +61,6 @@ const OrderModal = (props: props): ReactElement => {
           JSON.stringify(appdata.data.login.access_token)
         );
         settingUserId(appdata.data.login.access_token);
-        location.reload();
-
       }
     });
   };
