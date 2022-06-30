@@ -1,4 +1,3 @@
-import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 
 import { GiAbstract048 } from "react-icons/gi";

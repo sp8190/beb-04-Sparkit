@@ -58,11 +58,11 @@ const OrderModal = (props: props): ReactElement => {
         close();
         window.sessionStorage.setItem(
           "userInfo",
-          JSON.stringify(appdata.data.login.access_token)
+          appdata.data.login.access_token
         );
+        window.sessionStorage.setItem("userId", appdata.data.id);
         settingUserId(appdata.data.login.access_token);
         location.reload();
-
       }
     });
   };
@@ -86,6 +86,7 @@ const OrderModal = (props: props): ReactElement => {
                 <input
                   className="id_input"
                   type="text"
+                  placeholder="email"
                   onChange={({ target: { value } }) => setLogin_id(value)}
                   required
                 ></input>
@@ -96,6 +97,7 @@ const OrderModal = (props: props): ReactElement => {
                 <input
                   className="pw_input"
                   type="password"
+                  placeholder="password"
                   onChange={({ target: { value } }) => setLogin_pw(value)}
                   required
                 ></input>

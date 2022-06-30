@@ -1,13 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 import { useState } from "react";
-
 import SEO from "../../components/SEO";
-
 import LikeAndComment from "../../components/LikeAndComment";
-
 import { darkTheme } from "../../styles/theme";
-
 import Layout from "../../components/Layout";
 
 interface Params {
@@ -19,31 +15,30 @@ interface Props {
 }
 
 const GET_POST = gql`
-query getPost($post_id: Int!) {
-  getPost(post_id: $post_id) {
-    id
-    title
-    post_content
-    user_id
-    created_at
-    hashtags {
-      hashtag
-    }
-    comments {
-      post_id
+  query getPost($post_id: Int!) {
+    getPost(post_id: $post_id) {
+      id
+      title
+      post_content
       user_id
-      comment
-    }
-    writer {
-      nickname
-    }
-    images {
-      image_path
+      created_at
+      hashtags {
+        hashtag
+      }
+      comments {
+        post_id
+        user_id
+        comment
+      }
+      writer {
+        nickname
+      }
+      images {
+        image_path
+      }
     }
   }
-}
 `;
-
 
 const PostTitle = styled.h1`
   font-size: 36px;
@@ -66,7 +61,7 @@ const PostUserCreate = styled.div`
 const PostImage = styled.div`
   margin-left: 20px;
   margin-top: 30px;
-  .image{
+  .image {
     margin-top: 10px;
     width: 250px;
     height: 250px;
@@ -87,7 +82,7 @@ const PostBody = styled.div`
 // post_content 사용자 작성 글
 const PostHash = styled.div`
   display: flex;
-  color: rgb(255,255,255, 0.65);
+  color: rgb(255, 255, 255, 0.65);
   font-size: 16px;
   margin-top: 30px;
   margin-left: 20px;
@@ -134,7 +129,7 @@ const PostBottom = styled(PostHeader)`
 `;
 
 export default function Post({ params }: Props) {
-  const [isLiked, setIsLiked] = useState(0);
+  // const [isLiked, setIsLiked] = useState(0);
 
   //console.log(params)
 
@@ -162,7 +157,7 @@ export default function Post({ params }: Props) {
         }
       `,
       data: {
-        like: setIsLiked(isLiked + 1),
+        // like: setIsLiked(isLiked + 1),
       },
     });
   };
@@ -175,20 +170,20 @@ export default function Post({ params }: Props) {
       </DetailContainer>
     );
 
-    const { getPost } = data;
-    const { title } = getPost;
-    const { created_at } = getPost;
-    const { nickname } = getPost.writer;
-    const { post_content } = getPost;
-    const { hashtags } = getPost;
-    //const { likes } = getPost;
-    const { images } = getPost;
-  
-    console.log(getPost)
-    hashtags.map( (e: any) =>{
-      console.log(e.hashtag)
-    })
-  
+  const { getPost } = data;
+  const { title } = getPost;
+  const { created_at } = getPost;
+  const { nickname } = getPost.writer;
+  const { post_content } = getPost;
+  const { hashtags } = getPost;
+  //const { likes } = getPost;
+  const { images } = getPost;
+
+  console.log(getPost);
+  hashtags.map((e: any) => {
+    console.log(e.hashtag);
+  });
+
   //console.log(getPost)
   return (
     <Layout>
@@ -209,7 +204,7 @@ export default function Post({ params }: Props) {
             {images.map((token: any) => {
               return (
                 <div key={token}>
-                  <img className='image' src={token.image_path} />
+                  <img className="image" src={token.image_path} />
                 </div>
               );
             })}
@@ -220,10 +215,8 @@ export default function Post({ params }: Props) {
           </PostBody>
 
           <PostHash>
-          {hashtags.map((token: any) => {
-                return (
-                    <div key={token}>#{token.hashtag} </div>
-                );
+            {hashtags.map((token: any) => {
+              return <div key={token}>#{token.hashtag} </div>;
             })}
           </PostHash>
 
