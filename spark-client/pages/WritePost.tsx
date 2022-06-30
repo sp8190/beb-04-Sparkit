@@ -8,25 +8,7 @@ import { useRouter } from "next/router";
 import GetUserId from "../states/userId";
 import { useRecoilState } from "recoil";
 import { userIdState } from "../states/spark";
-const CREATE_POST = gql`
-  mutation CreatePost(
-    $title: String!
-    $post_content: String!
-    $user_id: Int
-    $hashtags: [String]
-    $images: [String]
-    $access_token: String
-  ) {
-    createPost(
-      title: $title
-      post_content: $post_content
-      user_id: $user_id
-      hashtags: $hashtags
-      images: $images
-      access_token: $access_token
-    )
-  }
-`;
+import { CREATE_POST } from "../query/MutationQuery";
 
 export default function WritePost() {
   const [isImageUpload, setImageUploaded] = useState(false);
@@ -34,9 +16,9 @@ export default function WritePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [hash, setHash] = useState("");
-  const [addNote, { loading, error }] = useMutation(CREATE_POST);
   const [accessToken, setAccessToken] = useState("");
   const [complete, setComplete] = useState(false);
+  const [addNote, { data, loading, error }] = useMutation(CREATE_POST);
   const router = useRouter();
   router;
   useEffect(() => {
@@ -44,6 +26,7 @@ export default function WritePost() {
   }, []);
   GetUserId();
   const [userId] = useRecoilState(userIdState);
+  console.log(userId);
   const onComplete = () => {
     if (!complete) {
       router.push("/");
@@ -53,6 +36,7 @@ export default function WritePost() {
       console.error(error);
     }
   };
+
   const handleClick = () => {
     // 해시태그 #으로 구분
     let hashtags = hash.split("#");

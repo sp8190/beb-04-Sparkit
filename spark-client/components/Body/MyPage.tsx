@@ -1,6 +1,5 @@
 import MainList from "../../components/MainList";
 
-import { gql, useQuery } from "@apollo/client";
 import { GetPostsByUserId } from "../../types/spark";
 import styled from "styled-components";
 
@@ -9,6 +8,7 @@ interface Props {
 }
 
 export default function MyPage({ data }: Props) {
+  console.log(data);
   const UserInfoAmendClick = () => {
     console.log("hi");
   };
@@ -21,8 +21,8 @@ export default function MyPage({ data }: Props) {
           <h4>토큰 잔액 정보</h4>
         </UserTitleBox>
         <UserContentBox>
-          <UserListP>balances: {`${data.getUserInfo.balance}`}</UserListP>
-          <UserListP>accounts: {`${data.getUserInfo.account}`}</UserListP>
+          <UserListP>balances: {`${data.getUserInfo?.balance}`}</UserListP>
+          <UserListP>accounts: {`${data.getUserInfo?.account}`}</UserListP>
         </UserContentBox>
       </UserInfoContainer>
       <UserInfoContainer>
@@ -30,9 +30,9 @@ export default function MyPage({ data }: Props) {
           <h4>개인정보</h4>
         </UserTitleBox>
         <UserContentBox>
-          <UserListP>id: {`${data.getUserInfo.id}`}</UserListP>
-          <UserListP>eamil id: {`${data.getUserInfo.email}`}</UserListP>
-          <UserListP>nickname: {`${data.getUserInfo.nickname}`}</UserListP>
+          <UserListP>id: {`${data.getUserInfo?.id}`}</UserListP>
+          <UserListP>eamil id: {`${data.getUserInfo?.email}`}</UserListP>
+          <UserListP>nickname: {`${data.getUserInfo?.nickname}`}</UserListP>
         </UserContentBox>
         <UserInfoAmendBox>
           <UserInfoAmend type="button" onClick={UserInfoAmendClick}>
@@ -44,7 +44,7 @@ export default function MyPage({ data }: Props) {
         <UserTitleBox>
           <h3>토큰 리스트</h3>
         </UserTitleBox>
-        {data && <MainList data={data.getUserInfo.posts} />}
+        {data && <MainList data={data.getUserInfo?.posts} />}
       </UserListContainer>
     </>
   );
