@@ -32,6 +32,7 @@ export interface GetPosts {
   comments: Comments[];
   writer: Writer;
   likes: Likes[];
+  images: string[];
 }
 
 export interface Likes {
