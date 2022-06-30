@@ -16,9 +16,9 @@ export default function WritePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [hash, setHash] = useState("");
-  const [addNote, { loading, error }] = useMutation(CREATE_POST);
   const [accessToken, setAccessToken] = useState("");
   const [complete, setComplete] = useState(false);
+  const [addNote, { data, loading, error }] = useMutation(CREATE_POST);
   const router = useRouter();
   router;
   useEffect(() => {
@@ -26,6 +26,7 @@ export default function WritePost() {
   }, []);
   GetUserId();
   const [userId] = useRecoilState(userIdState);
+  console.log(userId);
   const onComplete = () => {
     if (!complete) {
       router.push("/");
@@ -35,6 +36,7 @@ export default function WritePost() {
       console.error(error);
     }
   };
+
   const handleClick = () => {
     // 해시태그 #으로 구분
     let hashtags = hash.split("#");

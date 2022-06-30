@@ -4,6 +4,16 @@ import { useRecoilState } from "recoil";
 import { postsState } from "../../../states/spark";
 import { gql, useQuery } from "@apollo/client";
 import { darkTheme } from "../../../styles/theme";
+
+import {
+  AsideAside,
+  AsideLi,
+  AsideContainer,
+  AsideDiv,
+  AsideLiButton,
+} from "./Mainstyle/Saside";
+
+
 import { ALL_POST, ALL_POST_BY_HASHTAG } from "../../../query/GetQuery";
 import { ResultsHashTag, Results, BackColor, Tags } from "../../../types/spark";
 
@@ -16,7 +26,6 @@ interface Obj {
   id: number;
   count: number;
 }
-
 
 interface Props {
   setTitle: Function;
@@ -154,46 +163,3 @@ const Aside = ({ setTitle }: Props) => {
 };
 
 export default Aside;
-
-const AsideAside = styled.aside`
-  position: relative;
-  width: 20vw;
-  min-width: 250px;
-  max-width: 280px;
-`;
-
-const AsideLi = styled.li``;
-
-const AsideContainer = styled.div`
-  position: fixed;
-  width: inherit;
-  top: 120px;
-  min-width: 250px;
-  max-width: 280px;
-`;
-
-const AsideDiv = styled.div<BackColor>`
-  background-color: ${(props) => props.backgroundColor};
-  height: 300px;
-  border-radius: 4px;
-  margin: 20px;
-  padding: 16px 20px;
-`;
-
-const AsideLiButton = styled.button`
-  font-size: 14px;
-  outline: none;
-  border: none;
-  box-shadow: none;
-  cursor: pointer;
-  width: 100%;
-  padding: 14px 16px;
-  text-align: left;
-  color: ${darkTheme.accentColor};
-  background-color: transparent;
-
-  &:hover {
-    font-weight: bold;
-    color: #5fee99;
-  }
-`;
