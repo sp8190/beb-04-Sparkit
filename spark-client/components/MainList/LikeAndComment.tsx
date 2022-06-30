@@ -5,7 +5,7 @@ import { useLayoutEffect, useState } from "react";
 import { GetPosts } from "../../types/spark";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { GetPostsByUserId } from "../../types/spark";
-
+import GetUserId from "../../states/userId";
 import { useRecoilState } from "recoil";
 import { userIdState } from "../../states/spark";
 
@@ -73,8 +73,10 @@ const LikeAndComment = ({ postData }: Props) => {
   const [createLikes] = useMutation(LIKEIT);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
   const [postLikes, setPostLikes] = useState(likes?.length);
-  const [userId] = useRecoilState(userIdState);
 
+  GetUserId();
+  const [userId] = useRecoilState(userIdState);
+  console.log(userId);
   useLayoutEffect(() => {
     if (!likes) return;
     const likesUserIds = likes.map((item) => item.user_id);
